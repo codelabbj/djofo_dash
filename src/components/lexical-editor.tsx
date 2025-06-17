@@ -15,7 +15,6 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $getRoot, $getSelection, EditorState } from "lexical";
-import { useEffect, useRef } from "react";
 
 // Lexical Theme (can be expanded later)
 const theme = {
@@ -56,11 +55,6 @@ function HtmlSyncPlugin({ onHtmlChange }: { onHtmlChange: (html: string) => void
   );
 }
 
-// Lexical error handling
-function onError(error: Error) {
-  console.error(error);
-}
-
 interface LexicalEditorProps {
   value: string; // HTML string
   onChange: (value: string) => void; // Callback for HTML string
@@ -73,7 +67,7 @@ export const LexicalEditor = ({ value, onChange, readOnly = false }: LexicalEdit
     theme,
     onError: (error: Error) => console.error(error),
     nodes: [HeadingNode, ListNode, ListItemNode, LinkNode],
-    editorState: (editor: any) => {
+    editorState: (editor: unknown) => {
       if (value) {
         const parser = new DOMParser();
         const dom = parser.parseFromString(value, "text/html");
