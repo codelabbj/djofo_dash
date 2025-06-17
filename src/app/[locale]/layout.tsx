@@ -48,14 +48,6 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
 
-// Define proper types for the layout props
-type LayoutProps = {
-  children: React.ReactNode;
-  params: {
-    locale: string;
-  };
-};
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -71,13 +63,18 @@ async function getMessages(locale: string) {
   }
 }
 
-export default async function RootLayout({ children, params }: LayoutProps) {
-  // Await params.locale since it's a Promise in the Next.js types
-  const locale = await params.locale;
-  const messages = await getMessages(locale);
+export default function RootLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { locale: string };
+}) {
+  // Remove await since params.locale is not a Promise
+  const messages = getMessages(params.locale);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={params.locale} suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -85,7 +82,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider locale={locale} messages={messages}>
+          <NextIntlClientProvider locale={params.locale} messages={messages}>
             {children}
           </NextIntlClientProvider>
         </ThemeProvider>
