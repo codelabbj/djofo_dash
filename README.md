@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Djofo Admin Dashboard
+
+A modern admin dashboard for djofo.bj built with Next.js 15 and React 19.
+
+## Features
+
+- Content Management System
+- Rich Text Editor (Lexical)
+- File Upload
+- Internationalization (i18n)
+- Authentication
+- Configuration Dialog
+- Toast Notifications
+
+## Configuration Dialog
+
+The dashboard includes a configuration dialog that allows users to adjust settings for the editor and content. This is implemented using Radix UI Dialog.
+
+### Usage
+
+```jsx
+import * as Dialog from '@radix-ui/react-dialog';
+
+<Dialog.Root open={open} onOpenChange={setOpen}>
+  <Dialog.Trigger asChild>
+    <button>Open Config</button>
+  </Dialog.Trigger>
+  <Dialog.Portal>
+    <Dialog.Overlay className="dialog-overlay" />
+    <Dialog.Content className="dialog-content">
+      <Dialog.Title>Configuration</Dialog.Title>
+      {/* Your config form here */}
+      <Dialog.Close asChild>
+        <button>Close</button>
+      </Dialog.Close>
+    </Dialog.Content>
+  </Dialog.Portal>
+</Dialog.Root>
+```
+
+### Styling
+
+You can style the dialog by adding CSS for `.dialog-overlay` and `.dialog-content` classes.
+
+## Toast Notifications
+
+The dashboard uses `react-hot-toast` for displaying temporary notifications to users.
+
+### Usage
+
+```jsx
+import { toast } from 'react-hot-toast';
+
+// On success
+toast.success('Content saved successfully!');
+
+// On error
+toast.error('Failed to save content.');
+```
+
+### Setup
+
+Make sure to include the `<Toaster />` component in your app root:
+
+```jsx
+import { Toaster } from 'react-hot-toast';
+
+function App() {
+  return (
+    <>
+      <Toaster position="top-right" />
+      {/* ...rest of your app */}
+    </>
+  );
+}
+```
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run the development server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Technologies Used
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js 15
+- React 19
+- Lexical (Rich Text Editor)
+- Radix UI
+- react-hot-toast
+- i18n (next-intl)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## License
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
