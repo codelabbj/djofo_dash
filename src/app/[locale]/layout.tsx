@@ -43,7 +43,6 @@
 //   );
 // } 
 
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -73,10 +72,12 @@ async function getMessages(locale: string) {
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
-  const messages = await getMessages(params.locale);
+  // Await params.locale since it's a Promise in the Next.js types
+  const locale = await params.locale;
+  const messages = await getMessages(locale);
 
   return (
-    <html lang={params.locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -84,7 +85,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider locale={params.locale} messages={messages}>
+          <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
           </NextIntlClientProvider>
         </ThemeProvider>
