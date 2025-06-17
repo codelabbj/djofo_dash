@@ -20,6 +20,7 @@ async function getMessages(locale: string) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function RootLayout(props: any) {
   const { children, params } = props;
   const { locale } = params;
