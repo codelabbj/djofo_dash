@@ -5,8 +5,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { ToolbarPlugin } from "@lexical/react/LexicalToolbarPlugin";
-import { HeadingNode, $createHeadingNode } from "@lexical/rich-text";
+import { HeadingNode } from "@lexical/rich-text";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
@@ -14,7 +13,7 @@ import { LinkNode } from "@lexical/link";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getRoot, $getSelection, EditorState } from "lexical";
+import { $getRoot, EditorState } from "lexical";
 
 // Lexical Theme (can be expanded later)
 const theme = {
@@ -58,10 +57,9 @@ function HtmlSyncPlugin({ onHtmlChange }: { onHtmlChange: (html: string) => void
 interface LexicalEditorProps {
   value: string; // HTML string
   onChange: (value: string) => void; // Callback for HTML string
-  readOnly?: boolean;
 }
 
-export const LexicalEditor = ({ value, onChange, readOnly = false }: LexicalEditorProps) => {
+export const LexicalEditor = ({ value, onChange }: LexicalEditorProps) => {
   const initialConfig = {
     namespace: "RichTextEditor",
     theme,
