@@ -63,15 +63,14 @@ async function getMessages(locale: string) {
   }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  // Remove await since params.locale is not a Promise
-  const messages = getMessages(params.locale);
+  const messages = await getMessages(params.locale);
 
   return (
     <html lang={params.locale} suppressHydrationWarning>
