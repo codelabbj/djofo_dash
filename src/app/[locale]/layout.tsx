@@ -47,6 +47,15 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
+// Utility to load messages for the given locale
+async function getMessages(locale: string) {
+  try {
+    return (await import(`@/messages/${locale}.json`)).default;
+  } catch {
+    // Fallback to default locale messages
+    return (await import(`@/messages/en.json`)).default;
+  }
+}
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,14 +64,6 @@ export const metadata: Metadata = {
   description: "Admin dashboard for Djofo website",
 };
 
-async function getMessages(locale: string) {
-  try {
-    return (await import(`@/messages/${locale}.json`)).default;
-  } catch {
-    return (await import(`@/messages/en.json`)).default;
-  }
-}
-
 type Props = {
   children: React.ReactNode;
   params: {
@@ -70,13 +71,11 @@ type Props = {
   };
 };
 
-export default async function RootLayout(props: Props) {
-export default async function RootLayout(props: Props) {
-  const { locale } = props.params;
-  const messages = await getMessages(locale);
+export default async function RootLayout({ children, params }: Props) {
+  const messages = await getMessages(params.locale);
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={params.locale} suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -84,8 +83,8 @@ export default async function RootLayout(props: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            {props.children}
+          <NextIntlClientProvider locale={params.locale} messages={messages}>
+            {children}
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
