@@ -63,17 +63,20 @@ async function getMessages(locale: string) {
   }
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
+type Props = {
   children: React.ReactNode;
-  params: { locale: string };
-}) {
-  const messages = await getMessages(params.locale);
+  params: {
+    locale: string;
+  };
+};
+
+export default async function RootLayout(props: Props) {
+export default async function RootLayout(props: Props) {
+  const { locale } = props.params;
+  const messages = await getMessages(locale);
 
   return (
-    <html lang={params.locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
@@ -81,8 +84,8 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider locale={params.locale} messages={messages}>
-            {children}
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            {props.children}
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
