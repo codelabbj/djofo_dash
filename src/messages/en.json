@@ -48,7 +48,8 @@
     "address": "Address",
     "city": "City",
     "country": "Country",
-    "language": "Language"
+    "language": "Language",
+    "backToDashboard": "Back to Dashboard"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -57,10 +58,14 @@
     "statistics": "Statistics",
     "recentActivity": "Recent Activity",
     "quickActions": "Quick Actions",
+    "activeSessions": "Active Sessions",
+    "totalRevenue": "Total Revenue",
     "navigation": {
       "dashboard": "Dashboard",
       "content": "Content",
       "media": "Media Library",
+      "subscriptions": "Subscriptions",
+      "formations": "Formations",
       "settings": "Settings"
     }
   },
@@ -90,7 +95,8 @@
       "createError": "Failed to create content",
       "updateError": "Failed to update content",
       "deleteError": "Failed to delete content",
-      "noContent": "No content found."
+      "noContent": "No content found.",
+      "fetchError": "Failed to fetch content. Please try again later."
     }
   },
   "editor": {
@@ -124,7 +130,17 @@
   "errors": {
     "notFound": "Page Not Found",
     "unauthorized": "Unauthorized Access",
-    "serverError": "Internal Server Error"
+    "serverError": "Internal Server Error",
+    "networkError": "Network Error",
+    "timeoutError": "Request Timeout",
+    "validationError": "Validation Error",
+    "permissionDenied": "Permission Denied",
+    "resourceNotFound": "Resource Not Found",
+    "invalidCredentials": "Invalid Credentials",
+    "sessionExpired": "Session Expired",
+    "tooManyRequests": "Too Many Requests",
+    "maintenanceMode": "Service Under Maintenance",
+    "unknownError": "An Unknown Error Occurred"
   },
   "theme": {
     "light": "Light",
@@ -146,5 +162,88 @@
     "deleteSuccess": "File deleted successfully",
     "deleteError": "Failed to delete file",
     "deleteConfirm": "Are you sure you want to delete this file?"
+  },
+  "subscriptions": {
+    "title": "Subscriptions",
+    "subscribers": "Subscribers",
+    "search": "Search subscribers by name or email...",
+    "searching": "Searching...",
+    "clear": "Clear",
+    "totalSubscribers": "Total Subscribers",
+    "active": "Active",
+    "thisMonth": "This Month",
+    "subscribersList": "Subscribers List",
+    "loadingSubscribers": "Loading subscribers...",
+    "noSubscribers": "No subscribers yet.",
+    "noSubscribersFound": "No subscribers found matching your search.",
+    "subscriber": "Subscriber",
+    "email": "Email",
+    "status": "Status",
+    "joined": "Joined",
+    "anonymous": "Anonymous",
+    "unsubscribed": "Unsubscribed",
+    "active": "Active",
+    "retry": "Retry",
+    "authenticationRequired": "Authentication required",
+    "failedToFetch": "Failed to fetch subscribers",
+    "manageSubscribers": "Manage and view your newsletter subscribers"
+  },
+  "formations": {
+    "title": "Formations & Courses",
+    "manageFormations": "Manage your educational formations and courses",
+    "searchFormations": "Search formations...",
+    "searching": "Searching...",
+    "totalFormations": "Total Formations",
+    "totalCourses": "Total Courses",
+    "totalHours": "Total Hours",
+    "formations": "Formations",
+    "courses": "Courses",
+    "loadingFormations": "Loading formations...",
+    "noFormations": "No formations found.",
+    "noCourses": "No courses found.",
+    "newFormation": "New Formation",
+    "newCourse": "New Course",
+    "createFormation": "Create New Formation",
+    "createCourse": "Create New Course",
+    "formationTitle": "Title",
+    "formationDescription": "Description",
+    "formationLevel": "Level",
+    "formationHours": "Hours",
+    "formationObjectives": "Objectives",
+    "formationTags": "Tags",
+    "courseFormation": "Formation",
+    "courseTitle": "Title",
+    "courseContent": "Content",
+    "courseVideos": "Videos (URLs)",
+    "courseImages": "Images (URLs)",
+    "courseUrls": "URLs",
+    "selectFormation": "Select a formation",
+    "addObjective": "Add objective and press Enter",
+    "addTag": "Add tag and press Enter",
+    "addVideoUrl": "Add video URL and press Enter",
+    "addImageUrl": "Add image URL and press Enter",
+    "addUrl": "Add URL and press Enter",
+    "creating": "Creating...",
+    "createFormation": "Create Formation",
+    "createCourse": "Create Course",
+    "cancel": "Cancel",
+    "formationCreated": "Formation created successfully!",
+    "courseCreated": "Course created successfully!",
+    "failedToCreateFormation": "Failed to create formation",
+    "failedToCreateCourse": "Failed to create course",
+    "authenticationRequired": "Authentication required",
+    "failedToFetch": "Failed to fetch formations",
+    "level": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "course": "Course",
+    "formation": "Formation",
+    "content": "Content",
+    "media": "Media",
+    "created": "Created",
+    "hours": "h",
+    "courses": "courses"
   }
 } 

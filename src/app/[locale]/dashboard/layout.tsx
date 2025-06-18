@@ -3,29 +3,30 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X } from "lucide-react";
+import { Users, BookOpen, FileText, Image, Settings, Home } from "lucide-react";
 import { Header } from "@/components/header";
+import { useTranslations } from 'next-intl';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const navigation = [
-    { name: "Dashboard", href: "/dashboard" },
-    { name: "Content", href: "/dashboard/content" },
-    { name: "Media Library", href: "/dashboard/media" },
-    // { name: "Blog", href: "/dashboard/blog" },
-    { name: "Settings", href: "/dashboard/settings" },
-    // { name: "Profile", href: "/dashboard/profile" },
+    { name: t('dashboard.navigation.dashboard'), href: "/dashboard", icon: Home },
+    { name: t('dashboard.navigation.content'), href: "/dashboard/content", icon: FileText },
+    { name: t('dashboard.navigation.media'), href: "/dashboard/media", icon: Image },
+    { name: t('dashboard.navigation.subscriptions'), href: "/dashboard/subscriptions", icon: Users },
+    { name: t('dashboard.navigation.formations'), href: "/dashboard/formations", icon: BookOpen },
+    { name: t('dashboard.navigation.settings'), href: "/dashboard/settings", icon: Settings },
   ];
 
   if (!mounted) {
@@ -34,62 +35,31 @@ export default function DashboardLayout({
 
   return (
     <div className="admin-dashboard-layout">
-      {/* Mobile sidebar */}
-      <div
-        className="fixed-top d-lg-none"
-        style={{
-          zIndex: 1040,
-          visibility: sidebarOpen ? 'visible' : 'hidden',
-          opacity: sidebarOpen ? '1' : '0',
-          transition: 'opacity 0.3s ease-in-out',
-          width: sidebarOpen ? '100%' : '0',
-        }}
-      >
-        <div className="modal-backdrop fade show" style={{ position: 'absolute', inset: 0, background: 'rgba(0, 0, 0, 0.5)' }} onClick={() => setSidebarOpen(false)} />
-        <div className="sidebar" style={{ width: '250px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <div className="sidebar-header">
-            <span>Admin Dashboard</span>
-            <button onClick={() => setSidebarOpen(false)} style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>
-              <X size={24} />
-            </button>
-          </div>
-          <nav className="sidebar-nav">
-            <ul>
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={pathname === item.href ? "active" : ""}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </div>
-
       {/* Desktop sidebar */}
       <div className="sidebar d-none d-lg-flex flex-column">
-        <div className="sidebar-header"style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="sidebar-header" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src="/Logo2.png" alt="Djofo Logo" style={{ height: '102px', marginRight: '8px' }} />
           <span style={{ fontWeight: 600,  fontSize: '1.2rem', lineHeight: 1,}}>Djofo.bj</span>
         </div>
         <nav className="sidebar-nav">
           <ul>
-            {navigation.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.href}
-                  className={pathname === item.href ? "active" : ""}
-                  style={{ textDecoration: 'none' }}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    className={`${isActive ? "active" : ""} flex items-center gap-3`}
+                    style={{ textDecoration: 'none' }}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span>{item.name}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>

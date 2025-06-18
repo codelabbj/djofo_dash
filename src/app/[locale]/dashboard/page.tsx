@@ -14,11 +14,11 @@ export default function DashboardPage() {
           <p>0</p>
         </div>
         <div className="stat-card">
-          <h3>Active Sessions</h3>
+          <h3>{t('activeSessions')}</h3>
           <p>0</p>
         </div>
         {/* <div className="stat-card">
-          <h3>Total Revenue</h3>
+          <h3>{t('totalRevenue')}</h3>
           <p>$0</p>
         </div> */}
       </div>

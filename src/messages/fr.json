@@ -48,7 +48,8 @@
     "address": "Adresse",
     "city": "Ville",
     "country": "Pays",
-    "language": "Langue"
+    "language": "Langue",
+    "backToDashboard": "Retour au tableau de bord"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -57,10 +58,14 @@
     "statistics": "Statistiques",
     "recentActivity": "Activité Récente",
     "quickActions": "Actions Rapides",
+    "activeSessions": "Sessions actives",
+    "totalRevenue": "Revenu total",
     "navigation": {
       "dashboard": "Tableau de bord",
       "content": "Contenu",
       "media": "Bibliothèque médias",
+      "subscriptions": "Abonnements",
+      "formations": "Formations",
       "settings": "Paramètres"
     }
   },
@@ -90,7 +95,8 @@
       "createError": "Échec de la création du contenu",
       "updateError": "Échec de la mise à jour du contenu",
       "deleteError": "Échec de la suppression du contenu",
-      "noContent": "Aucun contenu trouvé."
+      "noContent": "Aucun contenu trouvé.",
+      "fetchError": "Échec de la récupération du contenu. Veuillez réessayer plus tard."
     }
   },
   "editor": {
@@ -124,7 +130,17 @@
   "errors": {
     "notFound": "Page non trouvée",
     "unauthorized": "Accès non autorisé",
-    "serverError": "Erreur interne du serveur"
+    "serverError": "Erreur interne du serveur",
+    "networkError": "Erreur réseau",
+    "timeoutError": "Délai d'attente dépassé",
+    "validationError": "Erreur de validation",
+    "permissionDenied": "Permission refusée",
+    "resourceNotFound": "Ressource non trouvée",
+    "invalidCredentials": "Identifiants invalides",
+    "sessionExpired": "Session expirée",
+    "tooManyRequests": "Trop de requêtes",
+    "maintenanceMode": "Service en maintenance",
+    "unknownError": "Une erreur inconnue s'est produite"
   },
   "theme": {
     "light": "Clair",
@@ -146,5 +162,88 @@
     "deleteSuccess": "Fichier supprimé avec succès",
     "deleteError": "Échec de la suppression du fichier",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce fichier ?"
+  },
+  "subscriptions": {
+    "title": "Abonnements",
+    "subscribers": "Abonnés",
+    "search": "Rechercher des abonnés par nom ou email...",
+    "searching": "Recherche...",
+    "clear": "Effacer",
+    "totalSubscribers": "Total des Abonnés",
+    "active": "Actifs",
+    "thisMonth": "Ce Mois",
+    "subscribersList": "Liste des Abonnés",
+    "loadingSubscribers": "Chargement des abonnés...",
+    "noSubscribers": "Aucun abonné pour le moment.",
+    "noSubscribersFound": "Aucun abonné trouvé correspondant à votre recherche.",
+    "subscriber": "Abonné",
+    "email": "Email",
+    "status": "Statut",
+    "joined": "Inscrit",
+    "anonymous": "Anonyme",
+    "unsubscribed": "Désabonné",
+    "active": "Actif",
+    "retry": "Réessayer",
+    "authenticationRequired": "Authentification requise",
+    "failedToFetch": "Échec de la récupération des abonnés",
+    "manageSubscribers": "Gérez et visualisez vos abonnés à la newsletter"
+  },
+  "formations": {
+    "title": "Formations & Cours",
+    "manageFormations": "Gérez vos formations et cours éducatifs",
+    "searchFormations": "Rechercher des formations...",
+    "searching": "Recherche...",
+    "totalFormations": "Total des Formations",
+    "totalCourses": "Total des Cours",
+    "totalHours": "Total des Heures",
+    "formations": "Formations",
+    "courses": "Cours",
+    "loadingFormations": "Chargement des formations...",
+    "noFormations": "Aucune formation trouvée.",
+    "noCourses": "Aucun cours trouvé.",
+    "newFormation": "Nouvelle Formation",
+    "newCourse": "Nouveau Cours",
+    "createFormation": "Créer une Nouvelle Formation",
+    "createCourse": "Créer un Nouveau Cours",
+    "formationTitle": "Titre",
+    "formationDescription": "Description",
+    "formationLevel": "Niveau",
+    "formationHours": "Heures",
+    "formationObjectives": "Objectifs",
+    "formationTags": "Tags",
+    "courseFormation": "Formation",
+    "courseTitle": "Titre",
+    "courseContent": "Contenu",
+    "courseVideos": "Vidéos (URLs)",
+    "courseImages": "Images (URLs)",
+    "courseUrls": "URLs",
+    "selectFormation": "Sélectionner une formation",
+    "addObjective": "Ajouter un objectif et appuyer sur Entrée",
+    "addTag": "Ajouter un tag et appuyer sur Entrée",
+    "addVideoUrl": "Ajouter une URL vidéo et appuyer sur Entrée",
+    "addImageUrl": "Ajouter une URL d'image et appuyer sur Entrée",
+    "addUrl": "Ajouter une URL et appuyer sur Entrée",
+    "creating": "Création...",
+    "createFormation": "Créer la Formation",
+    "createCourse": "Créer le Cours",
+    "cancel": "Annuler",
+    "formationCreated": "Formation créée avec succès !",
+    "courseCreated": "Cours créé avec succès !",
+    "failedToCreateFormation": "Échec de la création de la formation",
+    "failedToCreateCourse": "Échec de la création du cours",
+    "authenticationRequired": "Authentification requise",
+    "failedToFetch": "Échec de la récupération des formations",
+    "level": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé"
+    },
+    "course": "Cours",
+    "formation": "Formation",
+    "content": "Contenu",
+    "media": "Média",
+    "created": "Créé",
+    "hours": "h",
+    "courses": "cours"
   }
 } 
