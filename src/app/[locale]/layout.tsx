@@ -43,51 +43,28 @@
 //   );
 // } 
 
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
 import { NextIntlClientProvider } from "next-intl";
-// Utility to load messages for the given locale
+
 async function getMessages(locale: string) {
   try {
     return (await import(`@/messages/${locale}.json`)).default;
   } catch {
-    // Fallback to default locale messages
     return (await import(`@/messages/en.json`)).default;
   }
 }
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Djofo Dashboard",
-  description: "Admin dashboard for Djofo website",
-};
-
-type Props = {
+export default async function LocaleLayout({
+  children,
+  params: { locale },
+}: {
   children: React.ReactNode;
-  params: {
-    locale: string;
-  };
-};
-
-export default async function RootLayout({ children, params }: Props) {
-  const messages = await getMessages(params.locale);
+  params: { locale: string };
+}) {
+  const messages = await getMessages(locale);
 
   return (
-    <html lang={params.locale} suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextIntlClientProvider locale={params.locale} messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      {children}
+    </NextIntlClientProvider>
   );
 }

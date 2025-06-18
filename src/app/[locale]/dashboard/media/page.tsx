@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from 'next-intl';
 import { showToast } from '@/utils/toast';
 import { Toaster } from 'react-hot-toast';
+import Image from 'next/image';
 
 interface MediaFile {
   id: string;
@@ -224,12 +225,15 @@ export default function MediaLibraryPage() {
               position: 'relative'
             }}>
               {file.type.startsWith('image/') ? (
-                <img
-                  src={file.url}
-                  alt={file.name}
-                  style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px' }}
-                />
-              ) : (
+                  <Image
+                    src={file.url}
+                    alt={file.name}
+                    width={200}
+                    height={150}
+                    style={{ objectFit: 'cover' }}
+                    className="rounded-md"
+                  />
+                ) : (
                 <div className="file-preview" style={{
                   width: '100%',
                   height: '150px',
