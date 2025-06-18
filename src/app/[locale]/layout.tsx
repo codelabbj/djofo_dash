@@ -55,19 +55,21 @@ async function getMessages(locale: string) {
   }
 }
 
-export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  const messages = await getMessages(params.locale);
-
+export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
   return (
-    <NextIntlClientProvider locale={params.locale} messages={messages}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
-    </NextIntlClientProvider>
+    <html lang={params.locale}>
+      <body>
+        <NextIntlClientProvider locale={params.locale} messages={getMessages(params.locale)}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }
