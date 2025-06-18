@@ -43,9 +43,9 @@
 //   );
 // } 
 
-import { NextIntlClientProvider } from "next-intl";
-import { ThemeProvider } from "@/components/theme-provider";
-import type { LocaleLayoutProps } from "@/types/layout";
+import { NextIntlClientProvider } from 'next-intl';
+import { ThemeProvider } from '@/components/theme-provider';
+import type { LocaleLayoutProps } from '@/types/layout';
 
 async function getMessages(locale: string) {
   try {
@@ -55,21 +55,19 @@ async function getMessages(locale: string) {
   }
 }
 
-export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const messages = await getMessages(params.locale);
+
   return (
-    <html lang={params.locale}>
-      <body>
-        <NextIntlClientProvider locale={params.locale} messages={getMessages(params.locale)}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <NextIntlClientProvider locale={params.locale} messages={messages}>
+        {children}
+      </NextIntlClientProvider>
+    </ThemeProvider>
   );
 }
