@@ -1,18 +1,13 @@
 import createMiddleware from 'next-intl/middleware';
-import { NextRequest } from 'next/server';
 
-export type Locale = 'en' | 'fr';
+export const locales = ['en', 'fr'] as const;
+export type Locale = typeof locales[number];
 
-// Add type safety to the middleware
-const middleware = createMiddleware({
-  locales: ['en', 'fr'] as const,
-  defaultLocale: 'en' as const,
+export default createMiddleware({
+  locales: locales,
+  defaultLocale: 'fr',
   localePrefix: 'always'
 });
-
-export default function (request: NextRequest) {
-  return middleware(request);
-}
 
 export const config = {
   matcher: ['/((?!api|_next|.*\\..*).*)',]

@@ -1,4 +1,13 @@
 {
+  "dashboard": {
+    "title": "Dashboard",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "content": "Content",
+      "media": "Media Library",
+      "settings": "Settings"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

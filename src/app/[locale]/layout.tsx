@@ -45,7 +45,6 @@
 
 import { NextIntlClientProvider } from 'next-intl';
 import { ThemeProvider } from '@/components/theme-provider';
-import type { LocaleLayoutProps } from '@/types/layout';
 
 async function getMessages(locale: string) {
   try {
@@ -55,19 +54,29 @@ async function getMessages(locale: string) {
   }
 }
 
-export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  const messages = await getMessages(params.locale);
+export default async function LocaleLayout({
+  children,
+  params: { locale },
+}: {
+  children: React.ReactNode;
+  params: { locale: string };
+}) {
+  const messages = await getMessages(locale);
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <NextIntlClientProvider locale={params.locale} messages={messages}>
-        {children}
-      </NextIntlClientProvider>
-    </ThemeProvider>
+    <html lang={locale} suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={messages} locale={locale}>
+            {children}
+          </NextIntlClientProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

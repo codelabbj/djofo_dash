@@ -1,4 +1,14 @@
 {
+  "dashboard": {
+    "title": "Tableau de bord",
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "content": "Contenu",
+      "media": "Bibliothèque médias",
+      "settings": "Paramètres"
+    }
+  },
+  
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
