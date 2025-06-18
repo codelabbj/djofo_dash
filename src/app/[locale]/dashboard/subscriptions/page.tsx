@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from 'next-intl';
 import { Search, Users, Mail, Calendar } from "lucide-react";
 import { Toaster } from 'react-hot-toast';
@@ -21,7 +21,7 @@ export default function SubscriptionsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSubscribers = async (query?: string) => {
+  const fetchSubscribers = useCallback(async (query?: string) => {
     setLoading(true);
     setError(null);
     
@@ -75,11 +75,11 @@ export default function SubscriptionsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     fetchSubscribers();
-  }, []);
+  }, [fetchSubscribers]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
