@@ -1,13 +1,15 @@
-import { ReactNode } from 'react'
-import { Locale } from '@/middleware'
+import { ReactNode } from 'react';
+import { Locale } from '@/middleware';
 
 export interface RootLayoutProps {
-  children: ReactNode
+  children: ReactNode;
+}
+
+export interface LocaleLayoutParams {
+  locale: Locale;
 }
 
 export interface LocaleLayoutProps {
-  children: ReactNode
-  params: {
-    locale: Locale
-  }
+  children: ReactNode;
+  params: LocaleLayoutParams;
 }
