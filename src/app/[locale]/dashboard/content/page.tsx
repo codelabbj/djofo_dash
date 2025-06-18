@@ -354,7 +354,7 @@ export default function ContentCreatePage() {
         </div>
         <div className="form-group">
           <label htmlFor="fullContent">{t('common.content')}</label>
-          <LexicalEditor value={content} onChange={setContent} readOnly={editorConfig.readOnly} />
+          <LexicalEditor value={content} onChange={setContent} />
         </div>
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? t('common.loading') : t('content.create')}

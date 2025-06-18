@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from 'next-intl';
 import { showToast } from '@/utils/toast';
 import { Toaster } from 'react-hot-toast';
@@ -22,11 +22,7 @@ export default function MediaLibraryPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
 
-  useEffect(() => {
-    fetchMediaFiles();
-  }, []);
-
-  const fetchMediaFiles = async () => {
+  const fetchMediaFiles = useCallback(async () => {
     setLoading(true);
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -53,7 +49,11 @@ export default function MediaLibraryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchMediaFiles();
+  }, [fetchMediaFiles]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {

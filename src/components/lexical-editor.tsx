@@ -10,10 +10,12 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { LinkNode } from "@lexical/link";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $getRoot, EditorState } from "lexical";
+import { $getRoot, EditorState, FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection } from "lexical";
+import { TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { INSERT_UNORDERED_LIST_COMMAND, INSERT_ORDERED_LIST_COMMAND } from "@lexical/list";
 
 // Lexical Theme (can be expanded later)
 const theme = {
@@ -28,14 +30,29 @@ function Toolbar() {
   const [editor] = useLexicalComposerContext();
   return (
     <div className="lexical-toolbar">
-      <button type="button" onClick={() => editor.dispatchCommand('bold', undefined)}><b>B</b></button>
-      <button type="button" onClick={() => editor.dispatchCommand('italic', undefined)}><i>I</i></button>
-      <button type="button" onClick={() => editor.dispatchCommand('underline', undefined)}><u>U</u></button>
-      <button type="button" onClick={() => editor.dispatchCommand('insertUnorderedList', undefined)}>• List</button>
-      <button type="button" onClick={() => editor.dispatchCommand('insertOrderedList', undefined)}>1. List</button>
-      <button type="button" onClick={() => editor.dispatchCommand('insertLink', { url: prompt('Enter URL') || '' })}>🔗</button>
-      <button type="button" onClick={() => editor.dispatchCommand('formatHeading', { level: 1 })}>H1</button>
-      <button type="button" onClick={() => editor.dispatchCommand('formatHeading', { level: 2 })}>H2</button>
+      <button type="button" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}><b>B</b></button>
+      <button type="button" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}><i>I</i></button>
+      <button type="button" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}><u>U</u></button>
+      <button type="button" onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}>• List</button>
+      <button type="button" onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}>1. List</button>
+      <button type="button" onClick={() => {
+        const url = prompt('Enter URL') || '';
+        editor.dispatchCommand(TOGGLE_LINK_COMMAND, url ? { url } : null);
+      }}>🔗</button>
+      <button type="button" onClick={() => editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          const heading = new HeadingNode('h1');
+          selection.insertNodes([heading]);
+        }
+      })}>H1</button>
+      <button type="button" onClick={() => editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          const heading = new HeadingNode('h2');
+          selection.insertNodes([heading]);
+        }
+      })}>H2</button>
     </div>
   );
 }
@@ -65,7 +82,7 @@ export const LexicalEditor = ({ value, onChange }: LexicalEditorProps) => {
     theme,
     onError: (error: Error) => console.error(error),
     nodes: [HeadingNode, ListNode, ListItemNode, LinkNode],
-    editorState: (editor: unknown) => {
+    editorState: (editor: import("lexical").LexicalEditor) => {
       if (value) {
         const parser = new DOMParser();
         const dom = parser.parseFromString(value, "text/html");
