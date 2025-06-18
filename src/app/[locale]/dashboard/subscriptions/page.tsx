@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from 'next-intl';
-import { Search, Users, Mail, Calendar } from "lucide-react";
+import { Users, Mail, Calendar } from "lucide-react";
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '@/utils/toast';
 
@@ -68,7 +68,7 @@ export default function SubscriptionsPage() {
         setError(errorMessage);
         showToast.error(errorMessage);
       }
-    } catch (error) {
+    } catch {
       const errorMessage = t('errors.networkError');
       setError(errorMessage);
       showToast.error(errorMessage);
