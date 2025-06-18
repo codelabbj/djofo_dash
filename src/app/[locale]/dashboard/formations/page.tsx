@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from 'next-intl';
-import { Plus, BookOpen, Video, Image, Link, Search, Edit, Trash2, Clock, Tag } from "lucide-react";
+import { Plus, BookOpen, Video, Image, Link,  Clock } from "lucide-react";
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '@/utils/toast';
 
@@ -105,7 +105,7 @@ export default function FormationsPage() {
         setError(errorMessage);
         showToast.error(errorMessage);
       }
-    } catch (error) {
+    } catch {
       const errorMessage = t('errors.networkError');
       setError(errorMessage);
       showToast.error(errorMessage);
@@ -193,7 +193,7 @@ export default function FormationsPage() {
         
         showToast.error(errorMessage);
       }
-    } catch (error) {
+    } catch {
       showToast.error(t('errors.networkError'));
     } finally {
       setLoading(false);
@@ -254,12 +254,12 @@ export default function FormationsPage() {
         }
         
         showToast.error(errorMessage);
+        }
+      } catch {
+        showToast.error(t('errors.networkError'));
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      showToast.error(t('errors.networkError'));
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleArrayInput = (field: string, value: string, array: string[], setArray: (arr: string[]) => void) => {
