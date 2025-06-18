@@ -73,8 +73,9 @@ export default function DashboardLayout({
 
       {/* Desktop sidebar */}
       <div className="sidebar d-none d-lg-flex flex-column">
-        <div className="sidebar-header">
-          <span>Djofo Dashboard</span>
+        <div className="sidebar-header"style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src="/Logo2.png" alt="Djofo Logo" style={{ height: '102px', marginRight: '8px' }} />
+          <span style={{ fontWeight: 600,  fontSize: '1.2rem', lineHeight: 1,}}>Djofo.bj</span>
         </div>
         <nav className="sidebar-nav">
           <ul>

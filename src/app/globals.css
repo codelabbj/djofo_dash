@@ -138,7 +138,7 @@ body {
   margin-bottom: 0;
   padding: 32px 24px;
   text-align: center;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   letter-spacing: -0.025em;
@@ -598,7 +598,7 @@ textarea::placeholder {
   transform: translateX(-50%);
   width: 60%;
   height: 4px;
-  background: linear-gradient(90deg, var(--benin-green), var(--benin-yellow), var(--benin-red));
+  /* background: linear-gradient(90deg, var(--benin-green), var(--benin-yellow), var(--benin-red)); */
   border-radius: 2px;
 }
 

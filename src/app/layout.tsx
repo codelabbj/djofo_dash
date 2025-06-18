@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/components/toast-provider";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning>
-      <body className={geist.className}>{children}</body>
+      <body className={geist.className}>
+        {children}
+        <ToastProvider />
+      </body>
     </html>
   );
 }
