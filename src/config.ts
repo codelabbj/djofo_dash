@@ -1,11 +1,11 @@
-import { Pathnames } from 'next-intl/navigation';
-
-export const pathnames = {
+const pathnamesObj = {
   '/': '/',
   '/dashboard': '/dashboard',
   '/dashboard/content': '/dashboard/content',
   '/dashboard/media': '/dashboard/media',
   '/dashboard/settings': '/dashboard/settings',
-} satisfies Pathnames<typeof pathnames>;
+};
+
+export const pathnames = pathnamesObj;
 
 export type AppPathnames = keyof typeof pathnames;
