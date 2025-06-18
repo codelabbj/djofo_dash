@@ -1,14 +1,12 @@
-import { NextIntlClientProvider } from 'next-intl';
-import { ThemeProvider } from '@/components/theme-provider';
-import type { LocaleLayoutProps } from '@/types/layouts';
+import { NextIntlClientProvider } from 'next-intl'
+import { ThemeProvider } from '@/components/theme-provider'
+import type { LocaleLayoutProps } from '@/types/layouts'
 
 function getMessages(locale: string) {
-  return import(`@/messages/${locale}.json`).then((module) => module.default);
+  return import(`@/messages/${locale}.json`).then((module) => module.default)
 }
 
 export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
-  const messages = getMessages(params.locale);
-
   return (
     <ThemeProvider
       attribute="class"
@@ -16,9 +14,12 @@ export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <NextIntlClientProvider locale={params.locale} messages={messages}>
+      <NextIntlClientProvider 
+        locale={params.locale} 
+        messages={getMessages(params.locale)}
+      >
         {children}
       </NextIntlClientProvider>
     </ThemeProvider>
-  );
+  )
 }

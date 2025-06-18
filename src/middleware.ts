@@ -1,16 +1,18 @@
-import createMiddleware from 'next-intl/middleware';
-import { pathnames } from './config';
+import createMiddleware from 'next-intl/middleware'
+import { pathnames } from './config'
 
-export const locales = ['en', 'fr'] as const;
-export type Locale = (typeof locales)[number];
+export const locales = ['en', 'fr'] as const
+export type Locale = (typeof locales)[number]
 
-export default createMiddleware({
+const middleware = createMiddleware({
   defaultLocale: 'fr',
   locales,
   pathnames,
   localePrefix: 'always'
-});
+})
+
+export default middleware
 
 export const config = {
   matcher: ['/((?!api|_next|_vercel|.*\\..*).*)',]
-};
+}
