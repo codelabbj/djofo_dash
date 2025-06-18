@@ -1,14 +1,8 @@
 {
-  "dashboard": {
-    "title": "Dashboard",
-    "navigation": {
-      "dashboard": "Dashboard",
-      "content": "Content",
-      "media": "Media Library",
-      "settings": "Settings"
-    }
-  },
   "common": {
+    "welcome": "Welcome",
+    "dashboard": "Dashboard",
+    "content": "Content",
     "loading": "Loading...",
     "error": "An error occurred",
     "success": "Success",
@@ -31,7 +25,6 @@
     "time": "Time",
     "title": "Title",
     "description": "Description",
-    "content": "Content",
     "type": "Type",
     "tags": "Tags",
     "files": "Files",
@@ -58,11 +51,18 @@
     "language": "Language"
   },
   "dashboard": {
+    "title": "Dashboard",
     "welcome": "Welcome to Dashboard",
     "overview": "Overview",
     "statistics": "Statistics",
     "recentActivity": "Recent Activity",
-    "quickActions": "Quick Actions"
+    "quickActions": "Quick Actions",
+    "navigation": {
+      "dashboard": "Dashboard",
+      "content": "Content",
+      "media": "Media Library",
+      "settings": "Settings"
+    }
   },
   "content": {
     "create": "Create Content",

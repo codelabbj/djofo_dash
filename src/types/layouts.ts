@@ -10,5 +10,5 @@ export interface LocaleParams {
 }
 
 export interface LocaleLayoutProps extends BaseLayoutProps {
-  params: LocaleParams
+  params: Promise<LocaleParams>
 }

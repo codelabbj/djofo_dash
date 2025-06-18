@@ -1,15 +1,8 @@
 {
-  "dashboard": {
-    "title": "Tableau de bord",
-    "navigation": {
-      "dashboard": "Tableau de bord",
-      "content": "Contenu",
-      "media": "Bibliothèque médias",
-      "settings": "Paramètres"
-    }
-  },
-  
   "common": {
+    "welcome": "Bienvenue",
+    "dashboard": "Tableau de bord",
+    "content": "Contenu",
     "loading": "Chargement...",
     "error": "Une erreur est survenue",
     "success": "Succès",
@@ -32,7 +25,6 @@
     "time": "Heure",
     "title": "Titre",
     "description": "Description",
-    "content": "Contenu",
     "type": "Type",
     "tags": "Tags",
     "files": "Fichiers",
@@ -56,19 +48,21 @@
     "address": "Adresse",
     "city": "Ville",
     "country": "Pays",
-    "language": "Langue",
-    "theme": {
-      "light": "Clair",
-      "dark": "Sombre",
-      "system": "Système"
-    }
+    "language": "Langue"
   },
   "dashboard": {
+    "title": "Tableau de bord",
     "welcome": "Bienvenue sur le Tableau de Bord",
     "overview": "Aperçu",
     "statistics": "Statistiques",
     "recentActivity": "Activité Récente",
-    "quickActions": "Actions Rapides"
+    "quickActions": "Actions Rapides",
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "content": "Contenu",
+      "media": "Bibliothèque médias",
+      "settings": "Paramètres"
+    }
   },
   "content": {
     "create": "Créer du Contenu",
@@ -132,8 +126,11 @@
     "unauthorized": "Accès non autorisé",
     "serverError": "Erreur interne du serveur"
   },
-  "title": "Tableau de bord Djofo",
-  "description": "Tableau de bord administrateur pour le site web Djofo",
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
   "media": {
     "title": "Bibliothèque Média",
     "upload": "Télécharger des Fichiers",
