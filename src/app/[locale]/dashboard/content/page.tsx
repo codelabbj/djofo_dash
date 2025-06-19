@@ -105,7 +105,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'video' | 'link' | 'image' | null>(null);
   const [urlInput, setUrlInput] = useState('');
-  const lastValueRef = useRef<string>("");
+  // const lastValueRef = useRef<string>("");
 
   // Set initial value only on mount
   useEffect(() => {
@@ -319,7 +319,7 @@ export default function ContentCreatePage() {
   const [editTags, setEditTags] = useState<string[]>([]);
   const [editFiles, setEditFiles] = useState<string[]>([]);
   const [editContent, setEditContent] = useState('');
-  const [resetKey, setResetKey] = useState(0);
+  // Removed unused resetKey state
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -593,7 +593,7 @@ export default function ContentCreatePage() {
         </div>
         <div className="form-group">
           <label htmlFor="fullContent">{t('common.content')}</label>
-          <RichTextEditor key={resetKey} value={content} onChange={setContent} />
+          <RichTextEditor value={content} onChange={setContent} />
         </div>
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? t('common.loading') : t('content.create')}

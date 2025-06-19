@@ -16,7 +16,7 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations();
-  const activeItemRef = useRef(null);
+  const activeItemRef = useRef<HTMLAnchorElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -35,9 +35,9 @@ export default function DashboardLayout({
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent): void => {
       if (e.key === 'Escape' && sidebarOpen) {
-        setSidebarOpen(false);
+      setSidebarOpen(false);
       }
     };
 
@@ -75,7 +75,7 @@ export default function DashboardLayout({
     setSidebarOpen(false);
   };
 
-  const handleNavClick = (href) => {
+  const handleNavClick = () => {
     // Close sidebar on mobile after navigation
     if (window.innerWidth < 992) {
       setSidebarOpen(false);
@@ -129,7 +129,7 @@ export default function DashboardLayout({
         {/* Navigation */}
         <nav className="sidebar-nav" role="navigation">
           <ul role="list">
-            {navigation.map((item, index) => {
+            {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
@@ -140,7 +140,7 @@ export default function DashboardLayout({
                     className={`${isActive ? "active" : ""} flex items-center gap-3`}
                     style={{ textDecoration: 'none' }}
                     aria-current={isActive ? "page" : undefined}
-                    onClick={() => handleNavClick(item.href)}
+                    onClick={handleNavClick}
                     role="menuitem"
                     tabIndex={0}
                   >
