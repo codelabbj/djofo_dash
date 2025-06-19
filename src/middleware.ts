@@ -24,6 +24,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
   
+  // Force locale to 'fr' for testing
+  // request.nextUrl.locale = 'fr';
+
   // Continue with next-intl middleware
   return createMiddleware({
     defaultLocale: 'fr',

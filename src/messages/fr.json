@@ -53,11 +53,8 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "welcome": "Bienvenue sur le Tableau de Bord",
-    "overview": "Aperçu",
+    "welcome": "Bienvenue sur le Tableau de bord",
     "statistics": "Statistiques",
-    "recentActivity": "Activité Récente",
-    "quickActions": "Actions Rapides",
     "activeSessions": "Sessions actives",
     "totalRevenue": "Revenu total",
     "navigation": {
@@ -66,7 +63,11 @@
       "media": "Bibliothèque médias",
       "subscriptions": "Abonnements",
       "formations": "Formations",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+      "community": "Communauté",
+      "investigation": "Investigation",
+      "survey": "Sondage",
+      "podcast": "Podcast"
     }
   },
   "content": {

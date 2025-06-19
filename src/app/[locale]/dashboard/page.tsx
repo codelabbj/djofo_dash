@@ -1,25 +1,23 @@
 import React from "react";
-import { useTranslations } from 'next-intl';
 
 export default function DashboardPage() {
-  const t = useTranslations('dashboard');
   return (
     <div>
-      <h1>{t('title')}</h1>
-      <p>{t('welcome')}</p>
+      <h1>Tableau de bord</h1>
+      <p>Bienvenue sur le Tableau de bord</p>
 
       <div className="stats-grid">
         <div className="stat-card">
-          <h3>{t('statistics')}</h3>
+          <h3>Statistiques</h3>
           <p>0</p>
         </div>
         <div className="stat-card">
-          <h3>{t('activeSessions')}</h3>
+          <h3>Sessions actives</h3>
           <p>0</p>
         </div>
         {/* <div className="stat-card">
-          <h3>{t('totalRevenue')}</h3>
-          <p>$0</p>
+          <h3>Revenu total</h3>
+          <p>0 €</p>
         </div> */}
       </div>
     </div>

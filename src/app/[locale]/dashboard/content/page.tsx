@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
 import { LexicalEditor } from "@/components/lexical-editor";
-import { ConfigDialog } from "@/components/config-dialog";
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '@/utils/toast';
 import { Dialog } from '@radix-ui/react-dialog';
+import { X, Video, Bold, Italic, Underline, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, Link, Image, Table } from 'lucide-react';
+import React, { useRef } from 'react';
 
 interface ContentItem {
   id: number;
@@ -17,6 +18,284 @@ interface ContentItem {
   tags: string[];
   files: string[];
 }
+
+// --- TagInput Component ---
+type TagInputProps = {
+  tags: string[];
+  onTagsChange: (tags: string[]) => void;
+  placeholder?: string;
+};
+const TagInput: React.FC<TagInputProps> = ({ tags, onTagsChange, placeholder = "Add tags..." }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag();
+    } else if (e.key === 'Backspace' && inputValue === '' && tags.length > 0) {
+      removeTag(tags[tags.length - 1]);
+    }
+  };
+
+  const addTag = () => {
+    const trimmedValue = inputValue.trim();
+    if (trimmedValue && !tags.includes(trimmedValue)) {
+      onTagsChange([...tags, trimmedValue]);
+      setInputValue('');
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    onTagsChange(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  return (
+    <div className={`tag-input-wrapper${isInputFocused ? ' focused' : ''}`}>
+      <div className="tag-input-container">
+        {tags.map((tag, index) => (
+          <span key={index} className="tag-chip">
+            {tag}
+            <button
+              type="button"
+              className="tag-remove"
+              onClick={() => removeTag(tag)}
+              aria-label={`Remove ${tag}`}
+            >
+              <X size={12} />
+            </button>
+          </span>
+        ))}
+        <input
+          type="text"
+          className="tag-input"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => {
+            setIsInputFocused(false);
+            if (inputValue.trim()) addTag();
+          }}
+          placeholder={tags.length === 0 ? placeholder : ''}
+        />
+      </div>
+    </div>
+  );
+};
+
+// --- RichTextEditor Component ---
+type RichTextEditorProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+type ToolbarButtonProps = {
+  icon: React.ElementType;
+  command?: string;
+  value?: string;
+  isActive?: boolean;
+  title: string;
+  onClick?: () => void;
+};
+
+const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [activeFormats, setActiveFormats] = useState<Set<string>>(new Set());
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'video' | 'link' | 'image' | null>(null);
+  const [urlInput, setUrlInput] = useState('');
+  const lastValueRef = useRef<string>("");
+
+  // Set initial value only on mount
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = value || '';
+    }
+    // Only run on mount
+    // eslint-disable-next-line
+  }, []);
+
+  const openUrlModal = (type: 'video' | 'link' | 'image') => {
+    setModalType(type);
+    setUrlInput('');
+    setModalOpen(true);
+  };
+
+  const handleInsertUrl = () => {
+    if (!urlInput) return;
+    if (modalType === 'video') {
+      insertVideo(urlInput);
+    } else if (modalType === 'link') {
+      execCommand('createLink', urlInput);
+    } else if (modalType === 'image') {
+      execCommand('insertImage', urlInput);
+    }
+    setModalOpen(false);
+    setUrlInput('');
+  };
+
+  const insertVideo = (url: string) => {
+    let embedCode = '';
+    if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
+      const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+      const videoId = match ? match[1] : null;
+      if (videoId) {
+        embedCode = `<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 16px 0;">
+          <iframe src="https://www.youtube.com/embed/${videoId}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+        </div>`;
+      }
+    } else if (url.includes('vimeo.com/')) {
+      const match = url.match(/vimeo\.com\/(\d+)/);
+      const videoId = match ? match[1] : null;
+      if (videoId) {
+        embedCode = `<div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 16px 0;">
+          <iframe src="https://player.vimeo.com/video/${videoId}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allowfullscreen></iframe>
+        </div>`;
+      }
+    } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
+      embedCode = `<video controls style="width: 100%; max-width: 100%; height: auto; margin: 16px 0; border-radius: 8px;">
+        <source src="${url}" type="video/${url.split('.').pop()}">
+        Your browser does not support the video tag.
+      </video>`;
+    } else {
+      embedCode = `<div class="video-link" style="padding: 16px; background: #f3f4f6; border-radius: 8px; margin: 16px 0; text-align: center;">
+        <p style="margin: 0; color: #6b7280;">📹 Video: <a href="${url}" target="_blank" style="color: #3b82f6; text-decoration: none;">${url}</a></p>
+      </div>`;
+    }
+    if (embedCode) execCommand('insertHTML', embedCode);
+  };
+
+  const execCommand = (command: string, value?: string) => {
+    if (!editorRef.current) return;
+    editorRef.current.focus();
+    if (value !== undefined) {
+      document.execCommand(command, false, value);
+    } else {
+      document.execCommand(command);
+    }
+    updateActiveFormats();
+    if (onChange && editorRef.current) onChange(editorRef.current.innerHTML);
+  };
+
+  const updateActiveFormats = () => {
+    const formats = new Set<string>();
+    if (document.queryCommandState('bold')) formats.add('bold');
+    if (document.queryCommandState('italic')) formats.add('italic');
+    if (document.queryCommandState('underline')) formats.add('underline');
+    if (document.queryCommandState('insertUnorderedList')) formats.add('ul');
+    if (document.queryCommandState('insertOrderedList')) formats.add('ol');
+    if (document.queryCommandState('justifyLeft')) formats.add('left');
+    if (document.queryCommandState('justifyCenter')) formats.add('center');
+    if (document.queryCommandState('justifyRight')) formats.add('right');
+    setActiveFormats(formats);
+  };
+
+  const handleInput = () => {
+    if (onChange && editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
+  };
+
+  const ToolbarButton: React.FC<ToolbarButtonProps> = ({ icon: Icon, command, value, isActive, title, onClick }) => (
+    <button
+      type="button"
+      className={`toolbar-btn${isActive ? ' active' : ''}`}
+      onClick={onClick || (() => execCommand(command!, value))}
+      title={title}
+      tabIndex={-1}
+    >
+      <Icon size={16} />
+    </button>
+  );
+
+  return (
+    <div className="rich-editor-container">
+      <div className="rich-editor-toolbar">
+        <div className="toolbar-group">
+          <ToolbarButton icon={Bold} command="bold" isActive={activeFormats.has('bold')} title="Bold" />
+          <ToolbarButton icon={Italic} command="italic" isActive={activeFormats.has('italic')} title="Italic" />
+          <ToolbarButton icon={Underline} command="underline" isActive={activeFormats.has('underline')} title="Underline" />
+        </div>
+        <div className="toolbar-separator" />
+        <div className="toolbar-group">
+          <select className="font-select" onChange={(e) => execCommand('fontName', e.target.value)}>
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Georgia">Georgia</option>
+          </select>
+          <select className="size-select" onChange={(e) => execCommand('fontSize', e.target.value)}>
+            <option value="1">10px</option>
+            <option value="2">13px</option>
+            <option value="3">16px</option>
+            <option value="4">18px</option>
+            <option value="5">24px</option>
+            <option value="6">32px</option>
+            <option value="7">48px</option>
+          </select>
+        </div>
+        <div className="toolbar-separator" />
+        <div className="toolbar-group">
+          <ToolbarButton icon={List} command="insertUnorderedList" isActive={activeFormats.has('ul')} title="Bullet List" />
+          <ToolbarButton icon={ListOrdered} command="insertOrderedList" isActive={activeFormats.has('ol')} title="Numbered List" />
+        </div>
+        <div className="toolbar-separator" />
+        <div className="toolbar-group">
+          <ToolbarButton icon={AlignLeft} command="justifyLeft" isActive={activeFormats.has('left')} title="Align Left" />
+          <ToolbarButton icon={AlignCenter} command="justifyCenter" isActive={activeFormats.has('center')} title="Align Center" />
+          <ToolbarButton icon={AlignRight} command="justifyRight" isActive={activeFormats.has('right')} title="Align Right" />
+        </div>
+        <div className="toolbar-separator" />
+        <div className="toolbar-group">
+          <ToolbarButton icon={Video} title="Insert Video" onClick={() => openUrlModal('video')} />
+          <ToolbarButton icon={Link} title="Insert Link" onClick={() => openUrlModal('link')} />
+          <ToolbarButton icon={Image} title="Insert Image" onClick={() => openUrlModal('image')} />
+          <ToolbarButton icon={Table} command="insertHTML" value="<table border='1'><tr><td>Cell 1</td><td>Cell 2</td></tr></table>" title="Insert Table" />
+        </div>
+      </div>
+      <div
+        ref={editorRef}
+        className="rich-editor-content"
+        contentEditable
+        onInput={handleInput}
+        onMouseUp={updateActiveFormats}
+        onKeyUp={updateActiveFormats}
+        suppressContentEditableWarning={true}
+        style={{ minHeight: 200 }}
+      />
+      {/* Modal for URL input */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <div className="modal-backdrop" style={{ display: modalOpen ? 'block' : 'none' }}>
+          <div className="modal-content" style={{ padding: 24, borderRadius: 12, maxWidth: 400, margin: '10% auto', boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}>
+            <h3 style={{ marginBottom: 16 }}>
+              {modalType === 'video' && 'Insert Video URL'}
+              {modalType === 'link' && 'Insert Link URL'}
+              {modalType === 'image' && 'Insert Image URL'}
+            </h3>
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Paste URL here..."
+              value={urlInput}
+              onChange={e => setUrlInput(e.target.value)}
+              style={{ width: '100%', marginBottom: 16 }}
+              autoFocus
+            />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+              <button className="submit-button" type="button" onClick={handleInsertUrl} style={{ minWidth: 100 }}>
+                Insert
+              </button>
+              <button className="submit-button" type="button" onClick={() => setModalOpen(false)} style={{ background: '#eee', color: '#333', minWidth: 100 }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+    </div>
+  );
+};
 
 export default function ContentCreatePage() {
   const router = useRouter();
@@ -31,8 +310,6 @@ export default function ContentCreatePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editorConfig, setEditorConfig] = useState({ readOnly: false });
   const [contentList, setContentList] = useState<ContentItem[]>([]);
   const [loadingContent, setLoadingContent] = useState(false);
   const [editItem, setEditItem] = useState<ContentItem | null>(null);
@@ -42,17 +319,7 @@ export default function ContentCreatePage() {
   const [editTags, setEditTags] = useState<string[]>([]);
   const [editFiles, setEditFiles] = useState<string[]>([]);
   const [editContent, setEditContent] = useState('');
-
-  const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && e.currentTarget.value.trim()) {
-      setTags([...tags, e.currentTarget.value.trim()]);
-      e.currentTarget.value = "";
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
+  const [resetKey, setResetKey] = useState(0);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -267,29 +534,6 @@ export default function ContentCreatePage() {
     <div className="content-create-page">
       <Toaster position="top-right" />
       <h1>{t('content.create')}</h1>
-      <button
-        type="button"
-        onClick={() => setDialogOpen(true)}
-        style={{
-          padding: '8px 16px',
-          borderRadius: '4px',
-          backgroundColor: 'var(--primary-color)',
-          color: 'white',
-          border: 'none',
-          cursor: 'pointer',
-          marginBottom: '20px'
-        }}
-      >
-        {t('common.configuration')}
-      </button>
-
-      <ConfigDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onConfigChange={setEditorConfig}
-        initialConfig={editorConfig}
-      />
-
       {success && <p className="success-message">{success}</p>}
       {error && <p className="error-message">{error}</p>}
       <form className="content-form" onSubmit={handleSubmit}>
@@ -298,8 +542,10 @@ export default function ContentCreatePage() {
           <input
             type="text"
             id="title"
+            className="form-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            placeholder={t('common.title')}
             required
           />
         </div>
@@ -307,6 +553,7 @@ export default function ContentCreatePage() {
           <label htmlFor="contentType">{t('common.type')}</label>
           <select
             id="contentType"
+            className="form-select"
             value={selectedType}
             onChange={(e) => setSelectedType(parseInt(e.target.value))}
             required
@@ -319,49 +566,42 @@ export default function ContentCreatePage() {
         </div>
         <div className="form-group">
           <label htmlFor="tags">{t('common.tags')}</label>
-          <div className="tag-input-container">
-            {tags.map((tag, idx) => (
-              <span key={idx} className="tag-badge">
-                {tag}
-                <button type="button" onClick={() => handleRemoveTag(tag)} className="remove-tag-button">x</button>
-              </span>
-            ))}
-            <input
-              type="text"
-              id="tags"
-              placeholder={t('common.tags')}
-              onKeyDown={handleTagInput}
-            />
-          </div>
+          <TagInput
+            tags={tags}
+            onTagsChange={setTags}
+            placeholder={t('common.tags')}
+          />
         </div>
         <div className="form-group">
           <label htmlFor="files">{t('common.files')}</label>
           <input
             type="file"
             id="files"
+            className="file-input"
             accept="image/*,video/*,audio/*"
             onChange={handleFileChange}
             multiple
           />
           <div className="file-previews">
             {filesToUpload.map((file, idx) => (
-              <p key={idx}>{file.name}</p>
+              <div key={idx} className="file-preview">{file.name}</div>
             ))}
             {uploadedFileUrls.map((url, idx) => (
-              <p key={`uploaded-${idx}`}>{t('common.upload')}: {url}</p>
+              <div key={`uploaded-${idx}`} className="file-preview">{t('common.upload')}: {url}</div>
             ))}
           </div>
         </div>
         <div className="form-group">
           <label htmlFor="fullContent">{t('common.content')}</label>
-          <LexicalEditor value={content} onChange={setContent} />
+          <RichTextEditor key={resetKey} value={content} onChange={setContent} />
         </div>
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? t('common.loading') : t('content.create')}
         </button>
       </form>
+
       {/* Content List Section */}
-      <div className="content-list-container" style={{ marginTop: 40, marginBottom: 40, borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.07)', background: '#fff', padding: 32 }}>
+      <div className="content-list-container" style={{ marginTop: 40, marginBottom: 40, borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.07)', padding: 32 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
           <h2 style={{ fontSize: 22, fontWeight: 600 }}>{t('content.list')}</h2>
         </div>
@@ -456,4 +696,4 @@ export default function ContentCreatePage() {
       </Dialog>
     </div>
   );
-} 
+}

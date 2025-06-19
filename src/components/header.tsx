@@ -2,10 +2,10 @@
 
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
-import { Moon, Sun, Globe } from "lucide-react";
+import { Moon, Sun, Globe, Menu } from "lucide-react";
 import { useLocale } from "next-intl";
 
-export function Header() {
+export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
@@ -24,6 +24,18 @@ export function Header() {
   return (
     <div className="header">
       <div className="header-controls">
+         <button
+        className="sidebar-mobile-toggle"
+        onClick={onMenuClick}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          marginRight: "12px",
+        }}
+        aria-label="Open sidebar"
+      >
+        <Menu className="h-6 w-6" />
+      </button>
         <button
           onClick={toggleTheme}
           className="header-control-button"

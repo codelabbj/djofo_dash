@@ -54,20 +54,25 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome to Dashboard",
-    "overview": "Overview",
     "statistics": "Statistics",
-    "recentActivity": "Recent Activity",
-    "quickActions": "Quick Actions",
     "activeSessions": "Active Sessions",
     "totalRevenue": "Total Revenue",
+    "overview": "Overview",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
     "navigation": {
       "dashboard": "Dashboard",
       "content": "Content",
       "media": "Media Library",
       "subscriptions": "Subscriptions",
       "formations": "Formations",
-      "settings": "Settings"
+      "settings": "Settings",
+      "community": "Community",
+      "investigation": "Investigation",
+      "survey": "Survey",
+      "podcast": "Podcast"
     }
+   
   },
   "content": {
     "create": "Create Content",
