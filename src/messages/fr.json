@@ -49,7 +49,42 @@
     "city": "Ville",
     "country": "Pays",
     "language": "Langue",
-    "backToDashboard": "Retour au tableau de bord"
+    "backToDashboard": "Retour au tableau de bord",
+    "add": "Ajouter",
+    "removeTag": "Supprimer le tag {tag}",
+    "bold": "Gras",
+    "italic": "Italique",
+    "underline": "Souligné",
+    "bulletList": "Liste à puces",
+    "numberedList": "Liste numérotée",
+    "alignLeft": "Aligner à gauche",
+    "alignCenter": "Centrer",
+    "alignRight": "Aligner à droite",
+    "insertVideo": "Insérer une vidéo",
+    "insertLink": "Insérer un lien",
+    "insertImage": "Insérer une image",
+    "insertTable": "Insérer un tableau",
+    "insertVideoUrl": "Insérer l'URL de la vidéo",
+    "insertLinkUrl": "Insérer l'URL du lien",
+    "insertImageUrl": "Insérer l'URL de l'image",
+    "pasteUrlHere": "Collez l'URL ici...",
+    "insert": "Insérer",
+    "link": "Lien",
+    "investigation": "Investigation",
+    "survey": "Sondage",
+    "podcast": "Podcast",
+    "browserVideoSupport": "Votre navigateur ne prend pas en charge la balise vidéo.",
+    "episode": "Épisode",
+    "episodes": "Épisodes",
+    "audio": "Audio",
+    "video": "Vidéo",
+    "media": "Média",
+    "uploading": "Téléchargement...",
+    "processing": "Traitement...",
+    "published": "Publié",
+    "draft": "Brouillon",
+    "scheduled": "Programmé",
+    "archived": "Archivé"
   },
   "dashboard": {
     "title": "Tableau de bord",
@@ -98,7 +133,12 @@
       "deleteError": "Échec de la suppression du contenu",
       "noContent": "Aucun contenu trouvé.",
       "fetchError": "Échec de la récupération du contenu. Veuillez réessayer plus tard."
-    }
+    },
+    "uploadFile": "Télécharger depuis l'appareil",
+    "mediaLibrary": "Bibliothèque Média",
+    "addByLink": "Ajouter par lien",
+    "pasteLink": "Collez le lien vidéo/image/fichier ici...",
+    "selectFileTab": "Sélectionnez comment vous voulez ajouter des fichiers :"
   },
   "editor": {
     "readOnly": "Mode lecture seule",
@@ -162,7 +202,19 @@
     "uploadError": "Échec du téléchargement des fichiers",
     "deleteSuccess": "Fichier supprimé avec succès",
     "deleteError": "Échec de la suppression du fichier",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce fichier ?"
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce fichier ?",
+    "subtitle": "Gérez vos fichiers et ressources multimédias",
+    "uploadFiles": "Télécharger des Fichiers",
+    "uploading": "Téléchargement...",
+    "uploadSuccessful": "Téléchargement réussi !",
+    "uploadFailed": "Échec du téléchargement",
+    "deleteFailed": "Échec de la suppression",
+    "noFilesFound": "Aucun fichier trouvé",
+    "tryAdjustingSearch": "Essayez d'ajuster vos critères de recherche ou de filtre",
+    "uploadSomeFiles": "Téléchargez quelques fichiers pour commencer",
+    "selectedFilesCount": "Fichiers sélectionnés ({count}) :",
+    "documents": "Documents",
+    "loading": "Chargement..."
   },
   "subscriptions": {
     "title": "Abonnements",
@@ -206,6 +258,8 @@
     "newCourse": "Nouveau Cours",
     "createFormation": "Créer une Nouvelle Formation",
     "createCourse": "Créer un Nouveau Cours",
+    "formationPageDescription": "Créez une nouvelle formation avec des détails complets et des objectifs",
+    "coursePageDescription": "Créez un nouveau cours avec du contenu multimédia et des ressources",
     "formationTitle": "Titre",
     "formationDescription": "Description",
     "formationLevel": "Niveau",
@@ -224,6 +278,11 @@
     "addVideoUrl": "Ajouter une URL vidéo et appuyer sur Entrée",
     "addImageUrl": "Ajouter une URL d'image et appuyer sur Entrée",
     "addUrl": "Ajouter une URL et appuyer sur Entrée",
+    "titlePlaceholder": "Entrez le titre de la formation...",
+    "descriptionPlaceholder": "Décrivez le contenu et les objectifs de la formation...",
+    "formationIdPlaceholder": "Entrez l'ID de la formation...",
+    "courseTitlePlaceholder": "Entrez le titre du cours...",
+    "courseContentPlaceholder": "Décrivez le contenu du cours, les objectifs d'apprentissage et les sujets clés...",
     "creating": "Création...",
     "createFormation": "Créer la Formation",
     "createCourse": "Créer le Cours",
@@ -246,5 +305,98 @@
     "created": "Créé",
     "hours": "h",
     "courses": "cours"
+  },
+  "investigation": {
+    "list": "Liste des Investigations",
+    "create": "Créer une Investigation",
+    "types": {
+      "blog": "Blog",
+      "video": "Vidéo",
+      "podcast": "Podcast",
+      "animation": "Animation"
+    },
+    "uploadFile": "Télécharger un fichier",
+    "mediaLibrary": "Bibliothèque Média",
+    "addByLink": "Ajouter par lien",
+    "pasteLink": "Collez le lien ici...",
+    "messages": {
+      "createSuccess": "Investigation créée avec succès",
+      "uploadSuccess": "Fichier téléchargé avec succès",
+      "uploadError": "Échec du téléchargement du fichier",
+      "createError": "Échec de la création de l'investigation",
+      "noInvestigation": "Aucune investigation trouvée."
+    }
+  },
+  "survey": {
+    "list": "Liste des Sondages",
+    "create": "Créer un Sondage",
+    "types": {
+      "blog": "Blog",
+      "video": "Vidéo",
+      "podcast": "Podcast",
+      "animation": "Animation"
+    },
+    "uploadFile": "Télécharger un fichier",
+    "mediaLibrary": "Bibliothèque Média",
+    "addByLink": "Ajouter par lien",
+    "pasteLink": "Collez le lien ici...",
+    "messages": {
+      "createSuccess": "Sondage créé avec succès",
+      "uploadSuccess": "Fichier téléchargé avec succès",
+      "uploadError": "Échec du téléchargement du fichier",
+      "createError": "Échec de la création du sondage",
+      "noSurvey": "Aucun sondage trouvé."
+    }
+  },
+  "podcast": {
+    "list": "Liste des Podcasts",
+    "create": "Créer un Podcast",
+    "episodeInformation": "Informations de l'Épisode",
+    "episodeNumber": "Numéro d'Épisode",
+    "duration": "Durée",
+    "publishDate": "Date de Publication",
+    "shortDescription": "Description Courte",
+    "audioFile": "Fichier Audio",
+    "showNotes": "Notes d'Émission & Description",
+    "episodeDescription": "Description de l'Épisode & Notes d'Émission",
+    "categoriesTags": "Catégories & Tags",
+    "titlePlaceholder": "ex: Hygiène numérique quotidienne",
+    "descriptionPlaceholder": "Description brève de cet épisode...",
+    "episodeNumberPlaceholder": "ex: 1",
+    "durationPlaceholder": "ex: 35:00",
+    "breadcrumb": {
+      "dashboard": "Tableau de bord",
+      "podcast": "Podcast",
+      "create": "Créer",
+      "list": "Liste"
+    },
+    "pageTitle": {
+      "create": "Créer un Nouveau Podcast",
+      "list": "Gestion des Podcasts",
+      "edit": "Modifier le Podcast"
+    },
+    "manage": "Gérer les Podcasts",
+    "types": {
+      "blog": "Blog",
+      "video": "Vidéo",
+      "podcast": "Podcast",
+      "animation": "Animation"
+    },
+    "uploadFile": "Télécharger un fichier",
+    "mediaLibrary": "Bibliothèque Média",
+    "addByLink": "Ajouter par lien",
+    "pasteLink": "Collez le lien ici...",
+    "audioPreview": "Aperçu Audio",
+    "addTagsPlaceholder": "Ajoutez des tags comme : technologie, numérique, sécurité...",
+    "tagsHelp": "Appuyez sur Entrée ou virgule pour ajouter des tags. Tags populaires : podcast, tech, business, éducation, divertissement",
+    "showNotesHelp": "Ajoutez une description détaillée de l'épisode, des repères temporels, des liens et d'autres notes d'émission ici.",
+    "pasteAudioUrl": "Collez l'URL audio/vidéo ici...",
+    "messages": {
+      "createSuccess": "Podcast créé avec succès",
+      "uploadSuccess": "Fichier téléchargé avec succès",
+      "uploadError": "Échec du téléchargement du fichier",
+      "createError": "Échec de la création du podcast",
+      "noPodcast": "Aucun podcast trouvé."
+    }
   }
 } 

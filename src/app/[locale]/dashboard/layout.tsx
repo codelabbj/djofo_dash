@@ -18,11 +18,13 @@ export default function DashboardLayout({
   const t = useTranslations();
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
 
+  // Remove the locale prefix (e.g., /fr, /en) from the pathname for comparison
+  const normalizedPath = pathname.replace(/^\/[a-zA-Z-]+/, '');
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Scroll active item into view when pathname changes
   useEffect(() => {
     if (activeItemRef.current && mounted) {
       activeItemRef.current.scrollIntoView({
@@ -33,7 +35,6 @@ export default function DashboardLayout({
     }
   }, [pathname, mounted]);
 
-  // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent): void => {
       if (e.key === 'Escape' && sidebarOpen) {
@@ -45,7 +46,6 @@ export default function DashboardLayout({
     return () => document.removeEventListener('keydown', handleEscape);
   }, [sidebarOpen]);
 
-  // Prevent body scroll when sidebar is open on mobile
   useEffect(() => {
     if (sidebarOpen) {
       document.body.style.overflow = 'hidden';
@@ -60,14 +60,13 @@ export default function DashboardLayout({
 
   const navigation = [
     { name: t('dashboard.navigation.dashboard'), href: "/dashboard", icon: Home },
-    { name: t('dashboard.navigation.content'), href: "/dashboard/content", icon: FileText },
+    { name: t('dashboard.navigation.content'), href: "/dashboard/content/list", icon: FileText },
     { name: t('dashboard.navigation.media'), href: "/dashboard/media", icon: Image },
     { name: t('dashboard.navigation.subscriptions'), href: "/dashboard/subscriptions", icon: Users },
     { name: t('dashboard.navigation.formations'), href: "/dashboard/formations", icon: BookOpen },
-    { name: t('dashboard.navigation.community'), href: "/dashboard/community", icon: Users },
-    { name: t('dashboard.navigation.investigation'), href: "/dashboard/investigation", icon: Search },
-    { name: t('dashboard.navigation.survey'), href: "/dashboard/survey", icon: ListChecks },
-    { name: t('dashboard.navigation.podcast'), href: "/dashboard/podcast", icon: Mic },
+    { name: t('dashboard.navigation.investigation'), href: "/dashboard/investigation/list", icon: Search },
+    { name: t('dashboard.navigation.survey'), href: "/dashboard/survey/list", icon: ListChecks },
+    { name: t('dashboard.navigation.podcast'), href: "/dashboard/podcast/list", icon: Mic },
     { name: t('dashboard.navigation.settings'), href: "/dashboard/settings", icon: Settings },
   ];
 
@@ -76,7 +75,6 @@ export default function DashboardLayout({
   };
 
   const handleNavClick = () => {
-    // Close sidebar on mobile after navigation
     if (window.innerWidth < 992) {
       setSidebarOpen(false);
     }
@@ -88,13 +86,11 @@ export default function DashboardLayout({
 
   return (
     <div className="admin-dashboard-layout">
-      {/* Sidebar */}
       <div
         className={`sidebar ${sidebarOpen ? "sidebar-mobile-open" : ""}`}
         role="navigation"
         aria-label="Main navigation"
       >
-        {/* Mobile close button */}
         <button
           className="sidebar-mobile-close d-lg-none"
           onClick={handleSidebarClose}
@@ -104,7 +100,6 @@ export default function DashboardLayout({
           <X size={20} />
         </button>
 
-        {/* Sidebar Header */}
         <div className="sidebar-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' }}>
             <img 
@@ -126,12 +121,11 @@ export default function DashboardLayout({
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="sidebar-nav" role="navigation">
           <ul role="list">
             {navigation.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive = normalizedPath === item.href;
               return (
                 <li key={item.name} role="listitem">
                   <Link
@@ -147,7 +141,7 @@ export default function DashboardLayout({
                     <Icon className="h-5 w-5" aria-hidden="true" />
                     <span>{item.name}</span>
                     {isActive && (
-                      <span className="sr-only">Current page</span>
+                      <span className="sr-only"></span>
                     )}
                   </Link>
                 </li>
@@ -157,7 +151,6 @@ export default function DashboardLayout({
         </nav>
       </div>
 
-      {/* Overlay for mobile sidebar */}
       {sidebarOpen && (
         <div
           className="sidebar-overlay d-lg-none"
@@ -166,7 +159,6 @@ export default function DashboardLayout({
         />
       )}
 
-      {/* Main content */}
       <div className="main-content">
         <Header onMenuClick={() => setSidebarOpen(true)} />
         <main 

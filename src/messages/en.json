@@ -49,7 +49,42 @@
     "city": "City",
     "country": "Country",
     "language": "Language",
-    "backToDashboard": "Back to Dashboard"
+    "backToDashboard": "Back to Dashboard",
+    "add": "Add",
+    "removeTag": "Remove tag {tag}",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "bulletList": "Bullet List",
+    "numberedList": "Numbered List",
+    "alignLeft": "Align Left",
+    "alignCenter": "Align Center",
+    "alignRight": "Align Right",
+    "insertVideo": "Insert Video",
+    "insertLink": "Insert Link",
+    "insertImage": "Insert Image",
+    "insertTable": "Insert Table",
+    "insertVideoUrl": "Insert Video URL",
+    "insertLinkUrl": "Insert Link URL",
+    "insertImageUrl": "Insert Image URL",
+    "pasteUrlHere": "Paste URL here...",
+    "insert": "Insert",
+    "link": "Link",
+    "investigation": "Investigation",
+    "survey": "Survey",
+    "podcast": "Podcast",
+    "browserVideoSupport": "Your browser does not support the video tag.",
+    "episode": "Episode",
+    "episodes": "Episodes",
+    "audio": "Audio",
+    "video": "Video",
+    "media": "Media",
+    "uploading": "Uploading...",
+    "processing": "Processing...",
+    "published": "Published",
+    "draft": "Draft",
+    "scheduled": "Scheduled",
+    "archived": "Archived"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -102,7 +137,12 @@
       "deleteError": "Failed to delete content",
       "noContent": "No content found.",
       "fetchError": "Failed to fetch content. Please try again later."
-    }
+    },
+    "uploadFile": "Upload from device",
+    "mediaLibrary": "Media Library",
+    "addByLink": "Add by Link",
+    "pasteLink": "Paste video/image/file link here...",
+    "selectFileTab": "Select how you want to add files:"
   },
   "editor": {
     "readOnly": "Read-only mode",
@@ -166,7 +206,19 @@
     "uploadError": "Failed to upload files",
     "deleteSuccess": "File deleted successfully",
     "deleteError": "Failed to delete file",
-    "deleteConfirm": "Are you sure you want to delete this file?"
+    "deleteConfirm": "Are you sure you want to delete this file?",
+    "subtitle": "Manage your files and media assets",
+    "uploadFiles": "Upload Files",
+    "uploading": "Uploading...",
+    "uploadSuccessful": "Upload successful!",
+    "uploadFailed": "Upload failed",
+    "deleteFailed": "Delete failed",
+    "noFilesFound": "No files found",
+    "tryAdjustingSearch": "Try adjusting your search or filter criteria",
+    "uploadSomeFiles": "Upload some files to get started",
+    "selectedFilesCount": "Selected Files ({count}):",
+    "documents": "Documents",
+    "loading": "Loading..."
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -210,6 +262,8 @@
     "newCourse": "New Course",
     "createFormation": "Create New Formation",
     "createCourse": "Create New Course",
+    "formationPageDescription": "Create a new formation with comprehensive details and objectives",
+    "coursePageDescription": "Create a new course with multimedia content and resources",
     "formationTitle": "Title",
     "formationDescription": "Description",
     "formationLevel": "Level",
@@ -228,9 +282,12 @@
     "addVideoUrl": "Add video URL and press Enter",
     "addImageUrl": "Add image URL and press Enter",
     "addUrl": "Add URL and press Enter",
+    "titlePlaceholder": "Enter formation title...",
+    "descriptionPlaceholder": "Describe the formation content and goals...",
+    "formationIdPlaceholder": "Enter formation ID...",
+    "courseTitlePlaceholder": "Enter course title...",
+    "courseContentPlaceholder": "Describe the course content, learning objectives, and key topics...",
     "creating": "Creating...",
-    "createFormation": "Create Formation",
-    "createCourse": "Create Course",
     "cancel": "Cancel",
     "formationCreated": "Formation created successfully!",
     "courseCreated": "Course created successfully!",
@@ -250,5 +307,98 @@
     "created": "Created",
     "hours": "h",
     "courses": "courses"
+  },
+  "investigation": {
+    "list": "Investigation List",
+    "create": "Create Investigation",
+    "types": {
+      "blog": "Blog",
+      "video": "Video",
+      "podcast": "Podcast",
+      "animation": "Animation"
+    },
+    "uploadFile": "Upload File",
+    "mediaLibrary": "Media Library",
+    "addByLink": "Add by Link",
+    "pasteLink": "Paste link here...",
+    "messages": {
+      "createSuccess": "Investigation created successfully",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Failed to upload file",
+      "createError": "Failed to create investigation",
+      "noInvestigation": "No investigation found."
+    }
+  },
+  "survey": {
+    "list": "Survey List",
+    "create": "Create Survey",
+    "types": {
+      "blog": "Blog",
+      "video": "Video",
+      "podcast": "Podcast",
+      "animation": "Animation"
+    },
+    "uploadFile": "Upload File",
+    "mediaLibrary": "Media Library",
+    "addByLink": "Add by Link",
+    "pasteLink": "Paste link here...",
+    "messages": {
+      "createSuccess": "Survey created successfully",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Failed to upload file",
+      "createError": "Failed to create survey",
+      "noSurvey": "No survey found."
+    }
+  },
+  "podcast": {
+    "list": "Podcast List",
+    "create": "Create Podcast",
+    "episodeInformation": "Episode Information",
+    "episodeNumber": "Episode Number",
+    "duration": "Duration",
+    "publishDate": "Publish Date",
+    "shortDescription": "Short Description",
+    "audioFile": "Audio File",
+    "showNotes": "Show Notes & Description",
+    "episodeDescription": "Episode Description & Show Notes",
+    "categoriesTags": "Categories & Tags",
+    "titlePlaceholder": "e.g., Digital Hygiene Daily",
+    "descriptionPlaceholder": "Brief description of this episode...",
+    "episodeNumberPlaceholder": "e.g., 1",
+    "durationPlaceholder": "e.g., 35:00",
+    "breadcrumb": {
+      "dashboard": "Dashboard",
+      "podcast": "Podcast",
+      "create": "Create",
+      "list": "List"
+    },
+    "pageTitle": {
+      "create": "Create New Podcast",
+      "list": "Podcast Management",
+      "edit": "Edit Podcast"
+    },
+    "manage": "Manage Podcasts",
+    "types": {
+      "blog": "Blog",
+      "video": "Video",
+      "podcast": "Podcast",
+      "animation": "Animation"
+    },
+    "uploadFile": "Upload File",
+    "mediaLibrary": "Media Library",
+    "addByLink": "Add by Link",
+    "pasteLink": "Paste link here...",
+    "audioPreview": "Audio Preview",
+    "addTagsPlaceholder": "Add tags like: technology, digital, security...",
+    "tagsHelp": "Press Enter or comma to add tags. Popular tags: podcast, tech, business, education, entertainment",
+    "showNotesHelp": "Add detailed episode description, timestamps, links, and other show notes here.",
+    "pasteAudioUrl": "Paste audio/video URL here...",
+    "messages": {
+      "createSuccess": "Podcast created successfully",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Failed to upload file",
+      "createError": "Failed to create podcast",
+      "noPodcast": "No podcast found."
+    }
   }
 } 

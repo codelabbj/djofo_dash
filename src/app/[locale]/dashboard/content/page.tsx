@@ -3,20 +3,20 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from 'next-intl';
-import { LexicalEditor } from "@/components/lexical-editor";
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '@/utils/toast';
 import { Dialog } from '@radix-ui/react-dialog';
 import { X, Video, Bold, Italic, Underline, List, ListOrdered, AlignLeft, AlignCenter, AlignRight, Link, Image, Table } from 'lucide-react';
 import React, { useRef } from 'react';
+import styles from './page.module.css';
 
-interface ContentItem {
-  id: number;
-  title: string;
-  content: string;
-  type: number;
-  tags: string[];
-  files: string[];
+interface MediaFile {
+  id: string;
+  url: string;
+  name: string;
+  type: string;
+  size: number;
+  uploadedAt: string;
 }
 
 // --- TagInput Component ---
@@ -105,6 +105,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'video' | 'link' | 'image' | null>(null);
   const [urlInput, setUrlInput] = useState('');
+  const t = useTranslations();
   // const lastValueRef = useRef<string>("");
 
   // Set initial value only on mount
@@ -154,10 +155,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
         </div>`;
       }
     } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
-      embedCode = `<video controls style="width: 100%; max-width: 100%; height: auto; margin: 16px 0; border-radius: 8px;">
-        <source src="${url}" type="video/${url.split('.').pop()}">
-        Your browser does not support the video tag.
-      </video>`;
+      embedCode = `<video controls style=\"width: 100%; max-width: 100%; height: auto; margin: 16px 0; border-radius: 8px;\"><source src=\"${url}\" type=\"video/${url.split('.').pop()}\">${t('common.browserVideoSupport')}</video>`;
     } else {
       embedCode = `<div class="video-link" style="padding: 16px; background: #f3f4f6; border-radius: 8px; margin: 16px 0; text-align: center;">
         <p style="margin: 0; color: #6b7280;">📹 Video: <a href="${url}" target="_blank" style="color: #3b82f6; text-decoration: none;">${url}</a></p>
@@ -310,16 +308,28 @@ export default function ContentCreatePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [contentList, setContentList] = useState<ContentItem[]>([]);
-  const [loadingContent, setLoadingContent] = useState(false);
-  const [editItem, setEditItem] = useState<ContentItem | null>(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editTitle, setEditTitle] = useState('');
-  const [editType, setEditType] = useState(1);
-  const [editTags, setEditTags] = useState<string[]>([]);
-  const [editFiles, setEditFiles] = useState<string[]>([]);
-  const [editContent, setEditContent] = useState('');
-  // Removed unused resetKey state
+  const [fileTab, setFileTab] = useState<'upload' | 'library' | 'link'>('upload');
+  const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
+  const [selectedLibraryFiles, setSelectedLibraryFiles] = useState<MediaFile[]>([]);
+  const [linkInput, setLinkInput] = useState('');
+
+  // Fetch media files for library tab
+  useEffect(() => {
+    if (fileTab === 'library' && mediaFiles.length === 0) {
+      const fetchMedia = async () => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) return;
+        const response = await fetch('https://api.djofo.bj/api/media', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setMediaFiles(data);
+        }
+      };
+      fetchMedia();
+    }
+  }, [fileTab, mediaFiles.length]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -441,119 +451,30 @@ export default function ContentCreatePage() {
     }
   };
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      setLoadingContent(true);
-      const accessToken = localStorage.getItem('accessToken');
-      try {
-        const response = await fetch('https://api.djofo.bj/api/pubs', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setContentList(Array.isArray(data) ? data : data.results || []);
-        } else {
-          showToast.error(t('content.messages.fetchError'));
-        }
-      } catch {
-        showToast.error(t('content.messages.fetchError'));
-      } finally {
-        setLoadingContent(false);
-      }
-    };
-    fetchContent();
-  }, []);
-
-  const handleDelete = async (id: number) => {
-    if (!window.confirm(t('content.messages.deleteConfirm'))) return;
-    const accessToken = localStorage.getItem('accessToken');
-    try {
-      const response = await fetch(`https://api.djofo.bj/api/pubs/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      if (response.ok) {
-        setContentList((prev) => prev.filter((item) => item.id !== id));
-        showToast.success(t('content.messages.deleteSuccess'));
-      } else {
-        showToast.error(t('content.messages.deleteError'));
-      }
-    } catch {
-      showToast.error(t('content.messages.deleteError'));
-    }
-  };
-
-  const handleEdit = (item: ContentItem) => {
-    setEditItem(item);
-    setEditTitle(item.title);
-    setEditType(item.type);
-    setEditTags(item.tags);
-    setEditFiles(item.files);
-    setEditContent(item.content);
-    setEditModalOpen(true);
-  };
-
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editItem) return;
-    const accessToken = localStorage.getItem('accessToken');
-    try {
-      const response = await fetch(`https://api.djofo.bj/api/pubs/${editItem.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          ...editItem,
-          title: editTitle,
-          type: editType,
-          tags: editTags,
-          files: editFiles,
-          content: editContent,
-        }),
-      });
-      if (response.ok) {
-        const updated = { ...editItem, title: editTitle, type: editType, tags: editTags, files: editFiles, content: editContent };
-        setContentList((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
-        showToast.success(t('content.messages.updateSuccess'));
-        setEditModalOpen(false);
-      } else {
-        showToast.error(t('content.messages.updateError'));
-      }
-    } catch {
-      showToast.error(t('content.messages.updateError'));
-    }
-  };
-
   return (
-    <div className="content-create-page">
+    <div className={styles["content-create-page"]}>
       <Toaster position="top-right" />
       <h1>{t('content.create')}</h1>
-      {success && <p className="success-message">{success}</p>}
-      {error && <p className="error-message">{error}</p>}
-      <form className="content-form" onSubmit={handleSubmit}>
-        <div className="form-group">
+      {success && <p className={styles["success-message"]}>{success}</p>}
+      {error && <p className={styles["error-message"]}>{error}</p>}
+      <form className={styles["content-form"]} onSubmit={handleSubmit}>
+        <div className={styles["form-group"]}>
           <label htmlFor="title">{t('common.title')}</label>
           <input
             type="text"
             id="title"
-            className="form-input"
+            className={styles["form-input"]}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t('common.title')}
             required
           />
         </div>
-        <div className="form-group">
+        <div className={styles["form-group"]}>
           <label htmlFor="contentType">{t('common.type')}</label>
           <select
             id="contentType"
-            className="form-select"
+            className={styles["form-select"]}
             value={selectedType}
             onChange={(e) => setSelectedType(parseInt(e.target.value))}
             required
@@ -564,7 +485,7 @@ export default function ContentCreatePage() {
             <option value={4}>{t('content.types.animation')}</option>
           </select>
         </div>
-        <div className="form-group">
+        <div className={styles["form-group"]}>
           <label htmlFor="tags">{t('common.tags')}</label>
           <TagInput
             tags={tags}
@@ -572,128 +493,107 @@ export default function ContentCreatePage() {
             placeholder={t('common.tags')}
           />
         </div>
-        <div className="form-group">
+        <div className={styles["form-group"]}>
           <label htmlFor="files">{t('common.files')}</label>
-          <input
-            type="file"
-            id="files"
-            className="file-input"
-            accept="image/*,video/*,audio/*"
-            onChange={handleFileChange}
-            multiple
-          />
-          <div className="file-previews">
-            {filesToUpload.map((file, idx) => (
-              <div key={idx} className="file-preview">{file.name}</div>
-            ))}
-            {uploadedFileUrls.map((url, idx) => (
-              <div key={`uploaded-${idx}`} className="file-preview">{t('common.upload')}: {url}</div>
-            ))}
+          <div className={styles["tab-bar"]}>
+            <button
+              type="button"
+              className={fileTab === 'upload' ? styles.activeTab : styles.inactiveTab}
+              onClick={() => setFileTab('upload')}
+            >
+              {t('content.uploadFile')}
+            </button>
+            <button
+              type="button"
+              className={fileTab === 'library' ? styles.activeTab : styles.inactiveTab}
+              onClick={() => setFileTab('library')}
+            >
+              {t('content.mediaLibrary')}
+            </button>
+            <button
+              type="button"
+              className={fileTab === 'link' ? styles.activeTab : styles.inactiveTab}
+              onClick={() => setFileTab('link')}
+            >
+              {t('content.addByLink')}
+            </button>
           </div>
+          {fileTab === 'upload' && (
+            <div>
+              <input
+                type="file"
+                id="files"
+                className={styles["file-input"]}
+                accept="image/*,video/*,audio/*"
+                onChange={handleFileChange}
+                multiple
+              />
+              <div className={styles["file-previews"]}>
+                {filesToUpload.map((file, idx) => (
+                  <div key={idx} className={styles["file-preview"]}>{file.name}</div>
+                ))}
+              </div>
+            </div>
+          )}
+          {fileTab === 'library' && (
+            <div>
+              <div style={{ maxHeight: 200, overflowY: 'auto', border: '1px solid #eee', borderRadius: 8, padding: 8, background: '#fafbfc' }}>
+                {mediaFiles.length === 0 ? (
+                  <div style={{ color: '#888', textAlign: 'center', padding: 16 }}>{t('content.messages.noContent')}</div>
+                ) : (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {mediaFiles.map((file) => (
+                      <div
+                        key={file.id}
+                        style={{ border: selectedLibraryFiles.includes(file) ? '2px solid var(--benin-green)' : '1px solid #ddd', borderRadius: 8, padding: 8, cursor: 'pointer', background: '#fff', minWidth: 80 }}
+                        onClick={() => setSelectedLibraryFiles((prev) => prev.includes(file) ? prev.filter(f => f !== file) : [...prev, file])}
+                      >
+                        <div style={{ fontSize: 12, marginBottom: 4 }}>{file.name}</div>
+                        <div style={{ fontSize: 10, color: '#888' }}>{file.type}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className={styles["file-previews"]}>
+                {selectedLibraryFiles.map((file, idx) => (
+                  <div key={idx} className={styles["file-preview"]}>{file.name}</div>
+                ))}
+              </div>
+            </div>
+          )}
+          {fileTab === 'link' && (
+            <div>
+              <input
+                type="text"
+                className={styles["form-input"]}
+                placeholder={t('content.pasteLink')}
+                value={linkInput}
+                onChange={e => setLinkInput(e.target.value)}
+                style={{ marginBottom: 8 }}
+              />
+              <button type="button" className={styles["submit-button"]} style={{ width: 'auto', padding: '8px 18px', fontSize: 14 }} onClick={() => {
+                if (linkInput.trim()) {
+                  setUploadedFileUrls(prev => [...prev, linkInput.trim()]);
+                  setLinkInput('');
+                }
+              }}>{t('common.add')}</button>
+              <div className={styles["file-previews"]}>
+                {uploadedFileUrls.map((url, idx) => (
+                  <div key={idx} className={styles["file-preview"]}>{t('common.link')}: {url}</div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-        <div className="form-group">
+        <div className={styles["form-group"]}>
           <label htmlFor="fullContent">{t('common.content')}</label>
           <RichTextEditor value={content} onChange={setContent} />
         </div>
-        <button type="submit" className="submit-button" disabled={loading}>
+        <button type="submit" className={styles["submit-button"]} disabled={loading}>
           {loading ? t('common.loading') : t('content.create')}
         </button>
       </form>
-
-      {/* Content List Section */}
-      <div className="content-list-container" style={{ marginTop: 40, marginBottom: 40, borderRadius: 12, boxShadow: '0 2px 16px rgba(0,0,0,0.07)', padding: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-          <h2 style={{ fontSize: 22, fontWeight: 600 }}>{t('content.list')}</h2>
-        </div>
-        {loadingContent ? (
-          <p>{t('common.loading')}</p>
-        ) : contentList.length === 0 ? (
-          <div style={{ textAlign: 'center', color: '#888', padding: 32 }}>{t('content.messages.noContent')}</div>
-        ) : (
-          <table className="content-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
-            <thead>
-              <tr style={{ background: '#f7f7fa' }}>
-                <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 500, color: '#333', borderTopLeftRadius: 8 }}> {t('common.title')} </th>
-                <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 500, color: '#333' }}> {t('common.type')} </th>
-                <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 500, color: '#333' }}> {t('common.tags')} </th>
-                <th style={{ padding: '12px 8px', textAlign: 'left', fontWeight: 500, color: '#333', borderTopRightRadius: 8 }}> {t('common.actions')} </th>
-              </tr>
-            </thead>
-            <tbody>
-              {contentList.map((item, idx) => (
-                <tr key={item.id} style={{ background: idx % 2 === 0 ? '#fff' : '#f7f7fa', transition: 'background 0.2s' }}>
-                  <td style={{ padding: '10px 8px', borderBottom: '1px solid #eee' }}>{item.title}</td>
-                  <td style={{ padding: '10px 8px', borderBottom: '1px solid #eee' }}>{t(`content.types.${['blog','video','podcast','animation'][item.type-1]}`)}</td>
-                  <td style={{ padding: '10px 8px', borderBottom: '1px solid #eee' }}>{item.tags.join(', ')}</td>
-                  <td style={{ padding: '10px 8px', borderBottom: '1px solid #eee' }}>
-                    <button onClick={() => handleEdit(item)} style={{ marginRight: 8, padding: '6px 14px', borderRadius: 5, border: 'none', background: 'var(--primary-color, #2563eb)', color: '#fff', fontWeight: 500, cursor: 'pointer', transition: 'background 0.2s' }}>{t('common.edit')}</button>
-                    <button onClick={() => handleDelete(item.id)} style={{ padding: '6px 14px', borderRadius: 5, border: 'none', background: '#f87171', color: '#fff', fontWeight: 500, cursor: 'pointer', transition: 'background 0.2s' }}>{t('common.delete')}</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-      {/* End Content List Section */}
-      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        {editItem && (
-          <div className="edit-modal">
-            <h3>{t('content.edit')}</h3>
-            <form onSubmit={handleUpdate} className="content-form">
-              <div className="form-group">
-                <label htmlFor="editTitle">{t('common.title')}</label>
-                <input
-                  type="text"
-                  id="editTitle"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="editType">{t('common.type')}</label>
-                <select
-                  id="editType"
-                  value={editType}
-                  onChange={(e) => setEditType(parseInt(e.target.value))}
-                  required
-                >
-                  <option value={1}>{t('content.types.blog')}</option>
-                  <option value={2}>{t('content.types.video')}</option>
-                  <option value={3}>{t('content.types.podcast')}</option>
-                  <option value={4}>{t('content.types.animation')}</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="editTags">{t('common.tags')}</label>
-                <input
-                  type="text"
-                  id="editTags"
-                  value={editTags.join(', ')}
-                  onChange={(e) => setEditTags(e.target.value.split(',').map(tag => tag.trim()))}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="editFiles">{t('common.files')}</label>
-                <input
-                  type="text"
-                  id="editFiles"
-                  value={editFiles.join(', ')}
-                  onChange={(e) => setEditFiles(e.target.value.split(',').map(f => f.trim()))}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="editContent">{t('common.content')}</label>
-                <LexicalEditor value={editContent} onChange={setEditContent} />
-              </div>
-              <button type="submit" className="submit-button">
-                {t('common.save')}
-              </button>
-            </form>
-          </div>
-        )}
-      </Dialog>
     </div>
   );
 }

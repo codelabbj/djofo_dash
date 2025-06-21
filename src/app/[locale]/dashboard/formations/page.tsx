@@ -5,6 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Plus, BookOpen, Video, Image, Link,  Clock } from "lucide-react";
 import { Toaster } from 'react-hot-toast';
 import { showToast } from '@/utils/toast';
+import styles from './page.module.css';
+import { useRouter } from 'next/navigation';
 
 interface Formation {
   id: number;
@@ -36,17 +38,6 @@ export default function FormationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
   
-  // Formation form state
-  const [showFormationForm, setShowFormationForm] = useState(false);
-  const [formationForm, setFormationForm] = useState({
-    title: "",
-    description: "",
-    level: "beginner",
-    hours: "",
-    object: [] as string[],
-    tags: [] as string[]
-  });
-  
   // Course form state
   const [showCourseForm, setShowCourseForm] = useState(false);
   const [courseForm, setCourseForm] = useState({
@@ -57,6 +48,8 @@ export default function FormationsPage() {
     images: [] as string[],
     urls: [] as string[]
   });
+
+  const router = useRouter();
 
   const fetchFormations = async (query?: string) => {
     setLoading(true);
@@ -141,65 +134,6 @@ export default function FormationsPage() {
     fetchCourses();
   }, []);
 
-  const handleFormationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      showToast.error(t('errors.unauthorized'));
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("https://api.djofo.bj/api/formation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(formationForm),
-      });
-
-      if (response.ok) {
-        const newFormation = await response.json();
-        setFormations([...formations, newFormation]);
-        setFormationForm({
-          title: "",
-          description: "",
-          level: "beginner",
-          hours: "",
-          object: [],
-          tags: []
-        });
-        setShowFormationForm(false);
-        showToast.success(t('formations.formationCreated'));
-      } else {
-        const errorData = await response.json();
-        let errorMessage = t('errors.unknownError');
-        
-        if (response.status === 401) {
-          errorMessage = t('errors.unauthorized');
-        } else if (response.status === 403) {
-          errorMessage = t('errors.permissionDenied');
-        } else if (response.status === 422) {
-          errorMessage = t('errors.validationError');
-        } else if (response.status >= 500) {
-          errorMessage = t('errors.serverError');
-        } else if (errorData.detail || errorData.message) {
-          errorMessage = errorData.detail || errorData.message;
-        }
-        
-        showToast.error(errorMessage);
-      }
-    } catch {
-      showToast.error(t('errors.networkError'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleCourseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -281,32 +215,25 @@ export default function FormationsPage() {
   };
 
   return (
-    <div className="formations-page">
+    <div className={styles.formationsPage}>
       <Toaster />
       
       {/* Header */}
-      <div className="page-header">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <div className="stat-icon">
-              <BookOpen className="h-8 w-8" />
+      <div className={styles.pageHeader}>
+        <div className={styles.flexItemsCenterJustifyBetween}>
+          <div className={styles.flexItemsCenterGap3}>
+            <div className={styles.statIcon}>
+              <BookOpen className={styles.h8W8} />
             </div>
             <h1>{t('formations.title')}</h1>
           </div>
-          <div className="header-actions">
+          <div className={styles.headerActions}>
             <button
-              onClick={() => setShowFormationForm(true)}
-              className="search-button"
+              onClick={() => router.push('/dashboard/formations/new')}
+              className={styles.searchButton}
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className={styles.h4W4} />
               {t('formations.newFormation')}
-            </button>
-            <button
-              onClick={() => setShowCourseForm(true)}
-              className="clear-button"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              {t('formations.newCourse')}
             </button>
           </div>
         </div>
@@ -314,22 +241,22 @@ export default function FormationsPage() {
       </div>
 
       {/* Search Bar */}
-      <div className="search-container">
-        <form onSubmit={(e) => { e.preventDefault(); fetchFormations(searchQuery); }} className="search-form">
-          <div className="search-input-wrapper">
+      <div className={styles.searchContainer}>
+        <form onSubmit={(e) => { e.preventDefault(); fetchFormations(searchQuery); }} className={styles.searchForm}>
+          <div className={styles.searchInputWrapper}>
             {/*  <Search className="search-icon" /> */}
             <input
               type="text"
               placeholder={t('formations.searchFormations')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
+              className={styles.searchInput}
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="search-button"
+            className={styles.searchButton}
           >
             {loading ? t('formations.searching') : t('common.search')}
           </button>
@@ -337,35 +264,35 @@ export default function FormationsPage() {
       </div>
 
       {/* Stats */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-card-content">
-            <div className="stat-icon">
-              <BookOpen className="h-8 w-8" />
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <div className={styles.statCardContent}>
+            <div className={styles.statIcon}>
+              <BookOpen className={styles.h8W8} />
             </div>
-            <div className="stat-info">
+            <div className={styles.statInfo}>
               <h3>{t('formations.totalFormations')}</h3>
               <p>{formations.length}</p>
             </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-card-content">
-            <div className="stat-icon">
-              <Video className="h-8 w-8" />
+        <div className={styles.statCard}>
+          <div className={styles.statCardContent}>
+            <div className={styles.statIcon}>
+              <Video className={styles.h8W8} />
             </div>
-            <div className="stat-info">
+            <div className={styles.statInfo}>
               <h3>{t('formations.totalCourses')}</h3>
               <p>{courses.length}</p>
             </div>
           </div>
         </div>
-        <div className="stat-card">
-          <div className="stat-card-content">
-            <div className="stat-icon">
-              <Clock className="h-8 w-8" />
+        <div className={styles.statCard}>
+          <div className={styles.statCardContent}>
+            <div className={styles.statIcon}>
+              <Clock className={styles.h8W8} />
             </div>
-            <div className="stat-info">
+            <div className={styles.statInfo}>
               <h3>{t('formations.totalHours')}</h3>
               <p>
                 {formations.reduce((total, formation) => total + parseInt(formation.hours || '0'), 0)}
@@ -376,57 +303,57 @@ export default function FormationsPage() {
       </div>
 
       {/* Formations List */}
-      <div className="content-section">
-        <div className="section-header">
+      <div className={styles.contentSection}>
+        <div className={styles.sectionHeader}>
           <h2>{t('formations.formations')}</h2>
         </div>
         
-        <div className="section-content">
+        <div className={styles.sectionContent}>
           {loading ? (
-            <div className="loading-state">
-              <div className="loading-spinner"></div>
+            <div className={styles.loadingState}>
+              <div className={styles.loadingSpinner}></div>
               <p>{t('formations.loadingFormations')}</p>
             </div>
           ) : error ? (
-            <div className="error-state">
+            <div className={styles.errorState}>
               <p>{error}</p>
               <button
                 onClick={() => fetchFormations()}
-                className="retry-button"
+                className={styles.retryButton}
               >
                 {t('subscriptions.retry')}
               </button>
             </div>
           ) : formations.length === 0 ? (
-            <div className="empty-state">
-              <BookOpen className="empty-state-icon" />
+            <div className={styles.emptyState}>
+              <BookOpen className={styles.emptyStateIcon} />
               <p>{t('formations.noFormations')}</p>
             </div>
           ) : (
-            <div className="formations-grid">
+            <div className={styles.formationsGrid}>
               {formations.map((formation) => (
-                <div key={formation.id} className="formation-card">
-                  <div className="formation-header">
-                    <h3 className="formation-title">{formation.title}</h3>
-                    <span className={`formation-level ${formation.level}`}>
+                <div key={formation.id} className={styles.formationCard}>
+                  <div className={styles.formationHeader}>
+                    <h3 className={styles.formationTitle}>{formation.title}</h3>
+                    <span className={`${styles.formationLevel} ${styles[`level${formation.level}`]}`}>
                       {t(`formations.level.${formation.level}`)}
                     </span>
                   </div>
-                  <p className="formation-description">{formation.description}</p>
-                  <div className="formation-meta">
-                    <div className="formation-meta-item">
-                      <Clock className="h-4 w-4" />
+                  <p className={styles.formationDescription}>{formation.description}</p>
+                  <div className={styles.formationMeta}>
+                    <div className={styles.formationMetaItem}>
+                      <Clock className={styles.h4W4} />
                       {formation.hours}{t('formations.hours')}
                     </div>
-                    <div className="formation-meta-item">
-                      <Video className="h-4 w-4" />
+                    <div className={styles.formationMetaItem}>
+                      <Video className={styles.h4W4} />
                       {courses.filter(c => c.formation === formation.id).length} {t('formations.courses')}
                     </div>
                   </div>
                   {formation.tags.length > 0 && (
-                    <div className="formation-tags">
+                    <div className={styles.formationTags}>
                       {formation.tags.map((tag, index) => (
-                        <span key={index} className="formation-tag">
+                        <span key={index} className={styles.formationTag}>
                           {tag}
                         </span>
                       ))}
@@ -440,20 +367,20 @@ export default function FormationsPage() {
       </div>
 
       {/* Courses List */}
-      <div className="content-section">
-        <div className="section-header">
+      <div className={styles.contentSection}>
+        <div className={styles.sectionHeader}>
           <h2>{t('formations.courses')}</h2>
         </div>
         
-        <div className="section-content">
+        <div className={styles.sectionContent}>
           {courses.length === 0 ? (
-            <div className="empty-state">
-              <Video className="empty-state-icon" />
+            <div className={styles.emptyState}>
+              <Video className={styles.emptyStateIcon} />
               <p>{t('formations.noCourses')}</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="data-table">
+            <div className={styles.overflowXAuto}>
+              <table className={styles.dataTable}>
                 <thead>
                   <tr>
                     <th>{t('formations.course')}</th>
@@ -467,34 +394,34 @@ export default function FormationsPage() {
                   {courses.map((course) => (
                     <tr key={course.id}>
                       <td>
-                        <div className="text-sm font-medium text-gray-900">{course.title}</div>
-                        <div className="text-sm text-gray-500">ID: {course.id}</div>
+                        <div className={styles.textSmFontMediumTextGray900}>{course.title}</div>
+                        <div className={styles.textSmTextGray500}>ID: {course.id}</div>
                       </td>
                       <td>
-                        <div className="text-sm text-gray-900">
+                        <div className={styles.textSmTextGray900}>
                           {formations.find(f => f.id === course.formation)?.title || `${t('formations.formation')} ${course.formation}`}
                         </div>
                       </td>
                       <td>
-                        <div className="text-sm text-gray-900 max-w-xs truncate">{course.content}</div>
+                        <div className={styles.textSmTextGray900MaxXsTruncate}>{course.content}</div>
                       </td>
                       <td>
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
-                          <div className="flex items-center gap-1">
-                            <Video className="h-4 w-4" />
+                        <div className={styles.flexItemsCenterGap4TextSmTextGray500}>
+                          <div className={styles.flexItemsCenterGap1}>
+                            <Video className={styles.h4W4} />
                             {course.videos.length}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Image className="h-4 w-4" />
+                          <div className={styles.flexItemsCenterGap1}>
+                            <Image className={styles.h4W4} />
                             {course.images.length}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Link className="h-4 w-4" />
+                          <div className={styles.flexItemsCenterGap1}>
+                            <Link className={styles.h4W4} />
                             {course.urls.length}
                           </div>
                         </div>
                       </td>
-                      <td className="text-sm text-gray-500">
+                      <td className={styles.textSmTextGray500}>
                         {formatDate(course.created_at)}
                       </td>
                     </tr>
@@ -506,181 +433,28 @@ export default function FormationsPage() {
         </div>
       </div>
 
-      {/* Formation Form Modal */}
-      {showFormationForm && (
-        <div className="modal-overlay" onClick={() => setShowFormationForm(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 className="modal-title">{t('formations.createFormation')}</h2>
-              <button
-                onClick={() => setShowFormationForm(false)}
-                className="modal-close"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <form onSubmit={handleFormationSubmit} className="modal-body">
-              <div className="form-group">
-                <label className="form-label">{t('formations.formationTitle')}</label>
-                <input
-                  type="text"
-                  required
-                  value={formationForm.title}
-                  onChange={(e) => setFormationForm({...formationForm, title: e.target.value})}
-                  className="form-input"
-                />
-              </div>
-              
-              <div className="form-group">
-                <label className="form-label">{t('formations.formationDescription')}</label>
-                <textarea
-                  required
-                  rows={4}
-                  value={formationForm.description}
-                  onChange={(e) => setFormationForm({...formationForm, description: e.target.value})}
-                  className="form-textarea"
-                />
-              </div>
-              
-              <div className="form-grid">
-                <div className="form-group">
-                  <label className="form-label">{t('formations.formationLevel')}</label>
-                  <select
-                    value={formationForm.level}
-                    onChange={(e) => setFormationForm({...formationForm, level: e.target.value})}
-                    className="form-select"
-                  >
-                    <option value="beginner">{t('formations.level.beginner')}</option>
-                    <option value="intermediate">{t('formations.level.intermediate')}</option>
-                    <option value="advanced">{t('formations.level.advanced')}</option>
-                  </select>
-                </div>
-                
-                <div className="form-group">
-                  <label className="form-label">{t('formations.formationHours')}</label>
-                  <input
-                    type="number"
-                    required
-                    value={formationForm.hours}
-                    onChange={(e) => setFormationForm({...formationForm, hours: e.target.value})}
-                    className="form-input"
-                  />
-                </div>
-              </div>
-              
-              <div className="form-group">
-                <label className="form-label">{t('formations.formationObjectives')}</label>
-                <div className="array-input-container">
-                  <input
-                    type="text"
-                    placeholder={t('formations.addObjective')}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleArrayInput('object', e.currentTarget.value, formationForm.object, 
-                          (arr) => setFormationForm({...formationForm, object: arr}));
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                    className="array-input"
-                  />
-                  <div className="array-items">
-                    {formationForm.object.map((obj, index) => (
-                      <span key={index} className="array-item object">
-                        {obj}
-                        <button
-                          type="button"
-                          onClick={() => removeArrayItem('object', index, formationForm.object, 
-                            (arr) => setFormationForm({...formationForm, object: arr}))}
-                          className="array-item-remove"
-                        >
-                          ✕
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="form-group">
-                <label className="form-label">{t('formations.formationTags')}</label>
-                <div className="array-input-container">
-                  <input
-                    type="text"
-                    placeholder={t('formations.addTag')}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleArrayInput('tags', e.currentTarget.value, formationForm.tags, 
-                          (arr) => setFormationForm({...formationForm, tags: arr}));
-                        e.currentTarget.value = '';
-                      }
-                    }}
-                    className="array-input"
-                  />
-                  <div className="array-items">
-                    {formationForm.tags.map((tag, index) => (
-                      <span key={index} className="array-item tag">
-                        {tag}
-                        <button
-                          type="button"
-                          onClick={() => removeArrayItem('tags', index, formationForm.tags, 
-                            (arr) => setFormationForm({...formationForm, tags: arr}))}
-                          className="array-item-remove"
-                        >
-                          ✕
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </form>
-            
-            <div className="modal-actions">
-              <button
-                type="submit"
-                disabled={loading}
-                onClick={handleFormationSubmit}
-                className="modal-button primary"
-              >
-                {loading ? t('formations.creating') : t('formations.createFormation')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowFormationForm(false)}
-                className="modal-button secondary"
-              >
-                {t('formations.cancel')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Course Form Modal */}
       {showCourseForm && (
-        <div className="modal-overlay" onClick={() => setShowCourseForm(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 className="modal-title">{t('formations.createCourse')}</h2>
+        <div className={styles.modalOverlay} onClick={() => setShowCourseForm(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>{t('formations.createCourse')}</h2>
               <button
                 onClick={() => setShowCourseForm(false)}
-                className="modal-close"
+                className={styles.modalClose}
               >
                 ✕
               </button>
             </div>
             
-            <form onSubmit={handleCourseSubmit} className="modal-body">
-              <div className="form-group">
-                <label className="form-label">{t('formations.courseFormation')}</label>
+            <form onSubmit={handleCourseSubmit} className={styles.modalBody}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>{t('formations.courseFormation')}</label>
                 <select
                   required
                   value={courseForm.formation}
                   onChange={(e) => setCourseForm({...courseForm, formation: e.target.value})}
-                  className="form-select"
+                  className={styles.formSelect}
                 >
                   <option value="">{t('formations.selectFormation')}</option>
                   {formations.map((formation) => (
@@ -691,31 +465,31 @@ export default function FormationsPage() {
                 </select>
               </div>
               
-              <div className="form-group">
-                <label className="form-label">{t('formations.courseTitle')}</label>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>{t('formations.courseTitle')}</label>
                 <input
                   type="text"
                   required
                   value={courseForm.title}
                   onChange={(e) => setCourseForm({...courseForm, title: e.target.value})}
-                  className="form-input"
+                  className={styles.formInput}
                 />
               </div>
               
-              <div className="form-group">
-                <label className="form-label">{t('formations.courseContent')}</label>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>{t('formations.courseContent')}</label>
                 <textarea
                   required
                   rows={4}
                   value={courseForm.content}
                   onChange={(e) => setCourseForm({...courseForm, content: e.target.value})}
-                  className="form-textarea"
+                  className={styles.formTextarea}
                 />
               </div>
               
-              <div className="form-group">
-                <label className="form-label">{t('formations.courseVideos')}</label>
-                <div className="array-input-container">
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>{t('formations.courseVideos')}</label>
+                <div className={styles.arrayInputContainer}>
                   <input
                     type="text"
                     placeholder={t('formations.addVideoUrl')}
@@ -727,17 +501,17 @@ export default function FormationsPage() {
                         e.currentTarget.value = '';
                       }
                     }}
-                    className="array-input"
+                    className={styles.arrayInput}
                   />
-                  <div className="array-items">
+                  <div className={styles.arrayItems}>
                     {courseForm.videos.map((video, index) => (
-                      <span key={index} className="array-item video">
+                      <span key={index} className={styles.arrayItem}>
                         {video}
                         <button
                           type="button"
                           onClick={() => removeArrayItem('videos', index, courseForm.videos, 
                             (arr) => setCourseForm({...courseForm, videos: arr}))}
-                          className="array-item-remove"
+                          className={styles.arrayItemRemove}
                         >
                           ✕
                         </button>
@@ -747,9 +521,9 @@ export default function FormationsPage() {
                 </div>
               </div>
               
-              <div className="form-group">
-                <label className="form-label">{t('formations.courseImages')}</label>
-                <div className="array-input-container">
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>{t('formations.courseImages')}</label>
+                <div className={styles.arrayInputContainer}>
                   <input
                     type="text"
                     placeholder={t('formations.addImageUrl')}
@@ -761,17 +535,17 @@ export default function FormationsPage() {
                         e.currentTarget.value = '';
                       }
                     }}
-                    className="array-input"
+                    className={styles.arrayInput}
                   />
-                  <div className="array-items">
+                  <div className={styles.arrayItems}>
                     {courseForm.images.map((image, index) => (
-                      <span key={index} className="array-item image">
+                      <span key={index} className={styles.arrayItem}>
                         {image}
                         <button
                           type="button"
                           onClick={() => removeArrayItem('images', index, courseForm.images, 
                             (arr) => setCourseForm({...courseForm, images: arr}))}
-                          className="array-item-remove"
+                          className={styles.arrayItemRemove}
                         >
                           ✕
                         </button>
@@ -781,9 +555,9 @@ export default function FormationsPage() {
                 </div>
               </div>
               
-              <div className="form-group">
-                <label className="form-label">{t('formations.courseUrls')}</label>
-                <div className="array-input-container">
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>{t('formations.courseUrls')}</label>
+                <div className={styles.arrayInputContainer}>
                   <input
                     type="text"
                     placeholder={t('formations.addUrl')}
@@ -795,17 +569,17 @@ export default function FormationsPage() {
                         e.currentTarget.value = '';
                       }
                     }}
-                    className="array-input"
+                    className={styles.arrayInput}
                   />
-                  <div className="array-items">
+                  <div className={styles.arrayItems}>
                     {courseForm.urls.map((url, index) => (
-                      <span key={index} className="array-item url">
+                      <span key={index} className={styles.arrayItem}>
                         {url}
                         <button
                           type="button"
                           onClick={() => removeArrayItem('urls', index, courseForm.urls, 
                             (arr) => setCourseForm({...courseForm, urls: arr}))}
-                          className="array-item-remove"
+                          className={styles.arrayItemRemove}
                         >
                           ✕
                         </button>
@@ -816,19 +590,19 @@ export default function FormationsPage() {
               </div>
             </form>
             
-            <div className="modal-actions">
+            <div className={styles.modalActions}>
               <button
                 type="submit"
                 disabled={loading}
                 onClick={handleCourseSubmit}
-                className="modal-button primary"
+                className={styles.modalButtonPrimary}
               >
                 {loading ? t('formations.creating') : t('formations.createCourse')}
               </button>
               <button
                 type="button"
                 onClick={() => setShowCourseForm(false)}
-                className="modal-button secondary"
+                className={styles.modalButtonSecondary}
               >
                 {t('formations.cancel')}
               </button>

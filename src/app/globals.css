@@ -585,7 +585,7 @@ h1 {
   padding: 14px 18px;
   border: 2px solid var(--card-border);
   border-radius: 12px;
-  background: #f9fafb;
+  background: var(--card-bg);
   color: var(--text-color);
   font-size: 15px;
   font-family: inherit;
@@ -613,7 +613,7 @@ h1 {
 
 .file-preview {
   padding: 6px 12px;
-  background: #f1f5f9;
+  background: var(--background-secondary);
   border-radius: 8px;
   font-size: 13px;
   color: var(--text-secondary);
@@ -624,7 +624,7 @@ h1 {
   width: 100%;
   padding: 18px 0;
   background: linear-gradient(90deg, var(--benin-green) 60%, var(--benin-green-dark) 100%);
-  color: #fff;
+  color: var(--button-primary-text);
   border: none;
   border-radius: 14px;
   font-size: 17px;
@@ -648,22 +648,22 @@ h1 {
 }
 
 .success-message {
-  color: #22c55e;
-  background: #f0fdf4;
+  color: var(--success-color);
+  background: var(--button-primary-bg-transparent);
   border-radius: 8px;
   padding: 10px 18px;
   margin-bottom: 12px;
   font-weight: 500;
-  border: 1px solid #bbf7d0;
+  border: 1px solid var(--success-color);
 }
 .error-message {
-  color: #ef4444;
-  background: #fef2f2;
+  color: var(--error-color);
+  background: rgba(239, 68, 68, 0.1);
   border-radius: 8px;
   padding: 10px 18px;
   margin-bottom: 12px;
   font-weight: 500;
-  border: 1px solid #fecaca;
+  border: 1px solid var(--error-color);
 }
 
 /* Tag Input Styles */
@@ -695,7 +695,7 @@ h1 {
   gap: 6px;
   padding: 6px 12px;
   background: linear-gradient(90deg, var(--benin-green) 60%, var(--benin-green-dark) 100%);
-  color: #fff;
+  color: var(--button-primary-text);
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
@@ -721,7 +721,7 @@ h1 {
 }
 .tag-remove:hover {
   background: rgba(255,255,255,0.2);
-  color: #fff;
+  color: var(--button-primary-text);
 }
 .tag-input {
   border: none;
@@ -734,7 +734,7 @@ h1 {
   font-family: inherit;
 }
 .tag-input::placeholder {
-  color: #9ca3af;
+  color: var(--placeholder-color);
   opacity: 0.8;
 }
 
@@ -883,17 +883,17 @@ h1 {
   text-align: left;
   font-weight: 600;
   color: var(--text-color);
-  background: #f3f4f6;
+  background: var(--background-secondary);
   border-bottom: 1px solid var(--card-border);
 }
 .content-table td {
   padding: 12px 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--divider-color);
   color: var(--text-secondary);
   font-size: 15px;
 }
 .content-table tr:hover {
-  background: #f1f5f9;
+  background: var(--background-secondary);
 }
 .content-table button {
   padding: 6px 14px;
@@ -910,21 +910,21 @@ h1 {
 }
 .content-table .edit-button {
   background: var(--benin-green);
-  color: #fff;
+  color: var(--button-primary-text);
 }
 .content-table .edit-button:hover {
   background: var(--benin-green-dark);
 }
 .content-table .delete-button {
-  background: #ef4444;
-  color: #fff;
+  background: var(--button-danger-bg);
+  color: var(--button-primary-text);
 }
 .content-table .delete-button:hover {
-  background: #dc2626;
+  background: var(--button-danger-hover);
 }
 .no-content {
   text-align: center;
-  color: #9ca3af;
+  color: var(--text-secondary);
   padding: 32px;
   font-style: italic;
 }
@@ -956,7 +956,7 @@ h1 {
   padding: 12px 16px;
   border: 2px solid var(--card-border);
   border-radius: 10px;
-  background: #f9fafb;
+  background: var(--card-bg);
   color: var(--text-color);
   font-size: 15px;
   font-family: inherit;

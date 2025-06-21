@@ -9,8 +9,10 @@ export function ToastProvider() {
       toastOptions={{
         duration: 3000,
         style: {
-          background: "#333",
-          color: "#fff",
+          background: 'var(--card-bg)',
+          color: 'var(--text-color)',
+          border: '1px solid var(--card-border)',
+          boxShadow: '0 8px 32px var(--card-shadow)',
         },
       }}
     />

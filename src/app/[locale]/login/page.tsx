@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { showToast } from '@/utils/toast';
 import { Eye, EyeOff } from 'lucide-react';
+import styles from './page.module.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -87,11 +88,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
+    <div className={styles.loginContainer}>
+      <div className={styles.loginCard}>
         {/* <h1>Admin Login</h1> */}
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className={styles.loginForm}>
+          <div className={styles.formGroup}>
             <label htmlFor="email">{tCommon('email')}</label>
             <input
               type="text"
@@ -101,7 +102,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="password">{tCommon('password')}</label>
             <div style={{ position: 'relative' }}>
               <input
@@ -139,7 +140,7 @@ export default function LoginPage() {
               </button>
             </div>
           </div>
-          <button type="submit" className="submit-button" disabled={loading}>
+          <button type="submit" className={styles.submitButton} disabled={loading}>
             {loading ? tCommon('loading') : tCommon('login')}
           </button>
         </form>
