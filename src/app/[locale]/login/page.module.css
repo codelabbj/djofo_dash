@@ -64,4 +64,32 @@
     border-radius: 12px;
     max-width: 98vw;
   }
+}
+
+.submitButton {
+  width: 100%;
+  padding: 14px 0;
+  background: linear-gradient(90deg, #fcd116 0%, #00893e 100%);
+  color: #222;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,137,62,0.08);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  margin-top: 8px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: linear-gradient(90deg, #00893e 0%, #fcd116 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,137,62,0.12);
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
 } 

@@ -88,11 +88,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={styles.loginContainer}>
-      <div className={styles.loginCard}>
+    <div className={styles["login-container"]}>
+      <div className={styles["login-card"]}>
         {/* <h1>Admin Login</h1> */}
-        <form onSubmit={handleSubmit} className={styles.loginForm}>
-          <div className={styles.formGroup}>
+        <form onSubmit={handleSubmit} className={styles["login-form"]}>
+          <div className={styles["form-group"]}>
             <label htmlFor="email">{tCommon('email')}</label>
             <input
               type="text"
@@ -102,7 +102,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          <div className={styles.formGroup}>
+          <div className={styles["form-group"]}>
             <label htmlFor="password">{tCommon('password')}</label>
             <div style={{ position: 'relative' }}>
               <input
@@ -140,7 +140,7 @@ export default function LoginPage() {
               </button>
             </div>
           </div>
-          <button type="submit" className={styles.submitButton} disabled={loading}>
+          <button type="submit" className={styles["submitButton"]} disabled={loading}>
             {loading ? tCommon('loading') : tCommon('login')}
           </button>
         </form>
